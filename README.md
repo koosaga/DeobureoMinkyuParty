@@ -4,7 +4,7 @@
 ## Team Members
  * Hanpil Kang (Paohu, ho94949)
  * Jaehyun Koo 
-   * Codeforces : <span style="color:red">[koosaga]([http://codeforces.com/profile/koosaga)</span>
+   * <span style="color:red">Codeforces : [koosaga]([http://codeforces.com/profile/koosaga)</span>
    * Topcoder : gs14004
    * AtCoder : koosaga
    * CSAcademy : koosaga
@@ -38,4 +38,4 @@
 ## Notes
 팀 노트에 적혀있는 코드 중, credit을 적지 않은 코드는 저희들의 코드입니다. 자유롭게 사용하셔도 됩니다.
 
-Training 폴더에 들어있는 파일들은 작업 중인 폴더를 그대로 옮겨온 것입니다. 파일이 유실되거나 뒤섞일 수 있습니다 (이미 그런 경우가 많이 보이네요). 혹시 참고 자료로 사용하실 계획이 있다면 각별한 주의가 필요합니다.
+TrainingFolder 폴더에 들어있는 파일들은 작업 중인 폴더를 그대로 옮겨온 것입니다. 파일이 유실되거나 뒤섞일 수 있습니다 (이미 그런 경우가 많이 보이네요). 혹시 참고 자료로 사용하실 계획이 있다면 각별한 주의가 필요합니다.
