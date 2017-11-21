@@ -1,0 +1,5 @@
+_minted-teamnote
+*.aux
+*.log
+*.synctex.gz
+*.toc
