@@ -1296,6 +1296,7 @@ namespace fft{
 \subsection{Hell-Joseon style FFT}
 \begin{minted}{cpp}
 #include <smmintrin.h>
+#include <immintrin.h>
 #pragma GCC target("avx2")
 #pragma GCC target("fma")
 __m256d mult(__m256d a, __m256d b){
