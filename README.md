@@ -22,14 +22,14 @@
 ## ACM-ICPC
  * 2017.09.23 2nd in Korea National First Round 2017 
  * 2017.11.11 4th in Daejeon Regional 2017 (Univ Ranking 2nd)
- * (Planned) 2017.12.22 ??? in Nakhon Pathom Regional 2017 (Univ Ranking ???)
+ * 2017.12.22 Champion in Nakhon Pathom Regional 2017
  * (Planned) 2018.04.19 ??? in World Finals 2018
 
-|Date|Contest|AC|Max|A|B|C|D|E|F|G|H|I|J|K|L|M|
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-|2017.09.23|Korea National First Round |11|12|**A**|**B**|**C**|**D**|**E**|**F**|**G**|**H**|**I**|.|**K**|**L**||
-|2017.11.11|Daejeon Regional|11|12|**A**|**B**|**C**|**D**|**E**|**F**|**G**|**H**|**I**|.|**K**|**L**||
-|2017.12.22|Nakhon Pathom Regional|TBD|TBD|
+| Date       | Contest                    | AC   | Max  | A     | B     | C     | D     | E     | F     | G     | H     | I     | J    | K     | L     | M    |
+| ---------- | -------------------------- | ---- | ---- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ---- | ----- | ----- | ---- |
+| 2017.09.23 | Korea National First Round | 11   | 12   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** | **I** | .    | **K** | **L** |      |
+| 2017.11.11 | Daejeon Regional           | 11   | 12   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** | **I** | .    | **K** | **L** |      |
+| 2017.12.22 | Nakhon Pathom Regional     | 12   | 12   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** | **I** | **J** | **K** | **L** |      |
 |2018.04.19|World Finals|TBD|TBD
 
 ## Contest / Training
