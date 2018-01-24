@@ -1,0 +1,99 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int MAXN = 500005;
+
+struct node{
+	node *p, *l, *r;
+	int val, minv, size;
+	node(int x){
+		val = x;
+		minv = x;
+		size = 1;
+		p = l = r = NULL;
+	}
+}*root;
+
+void push(node *p){}
+
+void pull(node *p){
+	p->size = 1;
+	p->minv = p->val;
+	if(p->l){
+		p->size += p->l->size;
+		p->minv = min(p->minv, p->l->minv);
+	}
+	if(p->r){
+		p->size += p->r->size;
+		p->minv = min(p->minv, p->r->minv);
+	}
+}
+
+void rotate(node *x){
+	if(!x->p) return;
+	push(x->p);
+	push(x);
+	node *p = x->p;
+	bool is_left = (p->l == x);
+	node *b = (is_left ? x->r : x->l);
+	x->p = p->p;
+	if(x->p && x->p->l == p) x->p->l = x;
+	if(x->p && x->p->r == p) x->p->r = x;
+	if(is_left){
+		if(b) b->p = p;
+		p->l = b;
+		p->p = x;
+		x->r = p;
+	}
+	else{
+		if(b) b->p = p;
+		p->r = b;
+		p->p = x;
+		x->l = p;
+	}
+	pull(p);
+	pull(x);
+	if(x->p) root = x;
+}
+
+void splay(node *x){
+	while(x->p){
+		node *p = x->p;
+		node *g = p->p;
+		if(g){
+			if((p->l == x) ^ (g->l == p))rotate(x);
+			else rotate(p);
+		}
+		rotate(x);
+	}
+}
+
+void get_minv(node *p){
+	while(true){
+		if(p->val == p->minv) break;
+		if(p->l && p->l->minv == p->minv) p = p->l;
+		else p = p->r;
+	}
+	splay(p);
+}
+
+int n, a[MAXN];
+
+void solve(node *p){
+	get_minv(p);
+
+}
+
+int main(){
+	scanf("%d",&n);
+	for(int i=1; i<=n; i++) scanf("%d",&a[i]);
+	node *ptr = new node(a[n]);
+	for(int i=n-1; i; i--){
+		node *nxt = new node(a[i]);
+		nxt->r = ptr;
+		ptr->p = nxt;
+		pull(ptr);
+		ptr = nxt;
+	}
+	root = ptr;
+	solve(root);
+}
