@@ -71,6 +71,19 @@
 |2018.02.18|Opencup 2017-2018. GP of Gomel |7|10|**A**|**B**|**C**|.|**E**|**F**|**G**|.|.|**J**|.|||
 |2018.02.19|PA 2016 (Ptz Summer-2017. Warsaw U Contest) |7|11|**A**|.|**C**|**D**|.|.|**G**|**H**|.|**J**|**K**|||
 |2018.02.23|NEERC 2013 |9|10|**A**|**B**|**C**|.|.|**F**|**G**|**H**|**I**|**J**|**K**|||
-
+|2018.02.24|PA 2010 Stage 6 / Final |10|12|**A**|**B**|**C**|**D**|**E**|.|**G**|**H**|**I**|**J**|**K**|.||
+|2018.02.25|Opencup 2017-2018. GP of Saratov |11|12|**A**|.|**C**|**D**|**E**|**F**|**G**|**H**|**I**|**J**|**K**|**L**||
 
 ## FAQ
+
+#### What is Hell-Joseon FFT / MCMF? ####
+It's a highly pruned / low level optimized implementation of FFT and MCMF. These algorithms come along with typical implementation, because they tend to have some downfalls (long codes, system dependencies)
+
+#### What does your teamname means? ####
+It's a political joke... 
+
+But, it also means "We are having party together with Minkyu", as "Deobureo" means "Together" in Korean.
+
+#### I think your teamnote is wrong, your algorithm fails on this following problems / cases : ####
+We usually double-check our teamnote algorithms, but still the algorithms are buggy sometimes. We really appreciate any attempts to increase our teamnote quality, so please contact us (use koosaga's codeforces messages) in such occasion!
+
