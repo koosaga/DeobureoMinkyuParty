@@ -1,7 +1,7 @@
 % Team Note of Deobureo Minkyu Party.
 % These codes should be guaranteed, fast enough, short and easy to type.
 
-\documentclass[landscape, 10pt, a4paper, oneside,  twocolumn]{article}
+\documentclass[landscape, 8pt, a4paper, oneside,  twocolumn]{extarticle}
 
 \setlength{\columnseprule}{0.4pt}
 \pagenumbering{arabic}
@@ -36,15 +36,19 @@
 \newcommand{\revised}{Should be \textcolor{red}{\textbf{revised}}.}
 \newcommand{\tested}{Should be \textcolor{red}{\textbf{tested}}.}
 \newcommand{\added}{Should be \textcolor{red}{\textbf{added}}.}
+\newcommand{\WIP}{\textcolor{red}{\textbf{WIP}}}
 \begin{document}
 
 
-\maketitle
-
+{
+	\Large
+	
+	\maketitle
+	
 \tableofcontents
-
+}
 \thispagestyle{fancy}
-
+s
 \pagebreak
 
 %\section{Quote}
@@ -372,7 +376,7 @@ struct circ{
 }circ;
 \end{minted}
 
-\subsection {Min Cost Circulation (WIP)}
+\subsection {Min Cost Circulation (\WIP)}
 \added
 
 \subsection {Gomory-Hu Tree}
@@ -409,8 +413,234 @@ vector<pi> solve(int n){
 	return ret;
 }
 \end{minted}
-\subsection {Edmond's Blossom Algorithm for General Matching (WIP)}
-\added
+\subsection {Edmond's Blossom Algorithm for General Matching (\WIP)}
+\begin{minted}{cpp}
+// by kcm1700
+// time complexity: O(M |E| alpha(|V|,|E|)) 
+struct DisjointSet{
+	vector<int> parent, cnt;
+	DisjointSet() { }
+
+	DisjointSet(int n) : cnt(n, 1) {
+		parent.reserve(n);
+		for(int i = 0; i < n; i++) parent.push_back(i);
+	}
+
+	void reset(int sz) {
+		parent.clear(); cnt.clear();
+		for(int i = 0; i < sz; i++) {
+			parent.push_back(i);
+			cnt.push_back(1);
+		}
+	}
+
+	void increase(int sz) {
+		int base = parent.size();
+		for(int i = base; i < base+sz; i++) {
+			parent.push_back(i);
+			cnt.push_back(1);
+		}
+	}
+
+	int find(int p) {
+		int np = p;
+		while(p != parent[p]) p = parent[p];
+		while(np != parent[np]) {
+			int tmp = parent[np];
+			parent[np] = p;
+			np = tmp;
+		}
+		return p;
+	}
+
+	void merge(int a, int b) {
+		a = find(a), b = find(b);
+		if (a == b)
+			return;
+		if (cnt[a] > cnt[b]) {
+			cnt[a] += cnt[b];
+			parent[b] = a;
+		} else {
+			cnt[b] += cnt[a];
+			parent[a] = b;
+		}
+	}
+};
+
+struct MaxMatching{
+	int n;
+	vector<vector<int>> gnext;
+	vector<int> matched;
+	int vcnt;
+
+	MaxMatching(int n) : n(n), gnext(n), matched(n, -1){ }
+
+	void AddEdge(int a, int b) {
+		gnext[a].push_back(b);
+		gnext[b].push_back(a);
+	}
+
+	int Match() {
+		int ans = 0;
+		while(findAugment()) ans++;
+		return ans;
+	}
+
+	vector<int> parent; // shrunken -> real
+	vector<int> forest;
+	vector<int> level;
+	vector<pair<int,int>> bridge;
+	queue<int> q;
+	DisjointSet blossomSet;
+	vector<int> origin; // blossomSet number to -> origin vertex
+	vector<int> ancestorChecker;
+	int ancestorCheckerValue;
+
+	vector<int> marker;
+	void markBlossomPath(int vv, pair<int,int> vu, int ancestor){
+		int p = vv;
+		marker.clear();
+		while(p != ancestor) {
+			int np;
+			np = origin[blossomSet.find(parent[p])];
+			marker.push_back(p);
+			p = np;
+
+			np = origin[blossomSet.find(parent[p])];
+			marker.push_back(p);
+			bridge[p] = vu; // need original vertex number
+			q.push(p); // odd level edges were not considered
+			p = np;
+		}
+		for(auto x : marker) blossomSet.merge(ancestor, x);
+		origin[blossomSet.find(ancestor)] = ancestor;
+	}
+
+	void mergeBlossom(int vv, int uu, int v, int u){
+		if (uu == vv) return;
+		++ancestorCheckerValue;
+		int p1 = uu, p2 = vv;
+		int ancestor = -1;
+		for(;;) {
+			if (p1 >= 0) {
+				if (ancestorChecker[p1] == ancestorCheckerValue) {
+					ancestor = p1;
+					break;
+				}
+				ancestorChecker[p1] = ancestorCheckerValue;
+				if (parent[p1] >= 0) p1 = origin[blossomSet.find(parent[p1])]; else p1 = -1;
+			}
+			if (p2 >= 0) {
+				if (ancestorChecker[p2] == ancestorCheckerValue) {
+					ancestor = p2;
+					break;
+				}
+				ancestorChecker[p2] = ancestorCheckerValue;
+				if (parent[p2] >= 0) p2 = origin[blossomSet.find(parent[p2])]; else p2 = -1;
+			}
+		}
+		markBlossomPath(uu, make_pair(u, v), ancestor);
+		markBlossomPath(vv, make_pair(v, u), ancestor);
+	}
+
+	vector<int> augmentPathLink;
+
+	void getRootPath(int v, int w, bool reversed){
+		if (v == w) return;
+		if (level[v] & 1) {
+			// odd. use bridge
+			int x, y, mate = matched[v];
+			tie(x,y) = tie(bridge[v].first, bridge[v].second);
+			getRootPath(x, mate, !reversed);
+			getRootPath(y, w, reversed);
+			if (reversed) {
+				augmentPathLink[y] = x;
+				augmentPathLink[mate] = v;
+			} else {
+				augmentPathLink[v] = mate;
+				augmentPathLink[x] = y;
+			}
+		} else {
+			// even
+			int mate = matched[v];
+			getRootPath(parent[mate], w, reversed);
+			if (reversed) {
+				augmentPathLink[parent[mate]] = mate;
+				augmentPathLink[mate] = v;
+			} else {
+				augmentPathLink[v] = mate;
+				augmentPathLink[mate] = parent[mate];
+			}
+		}
+	}
+
+	void augmentPath(int v, int w) {
+		augmentPathLink = vector<int>(n,-1);
+		int x = forest[v];
+		int y = forest[w];
+		getRootPath(v,x,true);
+		getRootPath(w,y,false);
+		augmentPathLink[v] = w;
+		int p = x;
+		for(;;) {
+			int q = augmentPathLink[p];
+			matched[p] = q;
+			matched[q] = p;
+			if (q == y) break;
+			p = augmentPathLink[q];
+		}
+	}
+
+	bool findAugment() {
+		parent = vector<int>(n,-1);
+		forest = vector<int>(n,-1);
+		level = vector<int>(n);
+		bridge = vector<pair<int,int>>(n,make_pair(-1,-1));
+		q = queue<int>();
+		blossomSet.reset(n);
+		origin = vector<int>(n);
+		ancestorChecker = vector<int>(n);
+		ancestorCheckerValue = 0;
+
+		for(int i = 0; i < n; i++) {
+			origin[i] = i;
+			if (matched[i] == -1) {
+				forest[i] = i;
+				q.push(i);
+			}
+		}
+		bool foundPath = false;
+		while(!q.empty() && !foundPath) {
+			int v = q.front(); q.pop();
+			for(auto u : gnext[v]) {
+				int vv = origin[blossomSet.find(v)];
+				int uu = origin[blossomSet.find(u)];
+				if (forest[uu] == -1) {
+					// assert(u == uu)
+					parent[uu] = v;
+					forest[uu] = forest[vv];
+					level [uu] = level [vv] + 1;
+					parent[matched[uu]] = uu;
+					forest[matched[uu]] = forest[vv];
+					level [matched[uu]] = level [vv] + 2;
+					q.push(matched[uu]);
+				} else if (level[uu]&1) {
+					// odd level
+				} else if (forest[uu] != forest[vv]){
+					// found path. both are even level
+					foundPath = true;
+					augmentPath(v,u);
+					break;
+				} else {
+					// blossom formed
+					mergeBlossom(vv, uu, v, u);
+				}
+			}
+		}
+		return foundPath;
+	}
+};
+\end{minted}
 
 
 \section{Graph}
@@ -746,13 +976,13 @@ namespace stoer_wagner{
 };
 \end{minted}
 
-\subsection{K-shortest path (WIP)}
+\subsection{K-shortest path (\WIP)}
 \added
 
-\subsection {Edmond's Directed MST (WIP)}
+\subsection {Edmond's Directed MST (\WIP)}
 \added
 
-\subsection {Vizing Theorem for Edge Coloring (WIP)}
+\subsection {Vizing Theorem for Edge Coloring (\WIP)}
 \added
 
 \section{Strings}
@@ -878,7 +1108,7 @@ void solve(int n, int *str, int *ret){
 }
 \end{minted}
 
-\subsection{Palindromic Tree (WIP)}
+\subsection{Palindromic Tree (\WIP)}
 \added
 \subsection{Circular LCS}
 \begin{minted}{cpp}
@@ -1797,7 +2027,7 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
 \section{Miscellaneous}
 \subsection {Popular Optimization Technique}
 \begin{itemize}
-	\item CHT. DnC optimization. Mo's \sout{algorithm} trick (on tree). Aliens trick.
+	\item CHT. DnC optimization. Mo's \sout{algorithm} trick (on tree). IOI 2016 Aliens trick. IOI 2009 Hiring trick. 
 	\item Knuth's $O(n^2)$ Optimal BST : minimize $D_{i, j} = Min_{i \leq k < j}(D_{i, k} + D_{k+1, j}) + C_{i, j}$. Quadrangle Inequality : $C_{a, c} + C_{b, d} \leq C_{a, d} + C_{b, c}$, $C_{b, c} \leq C_{a, d}$. Now monotonicity holds. 
 	\item Sqrt batch processing - Save queries in buffer, and update in every sqrt steps (cf : IOI 2011 Elephant. hyea calls it "ainta technique")
 	\item Dynamic insertion in static set (Make $O(lgn)$ copy. Merge like binomial heap.)
