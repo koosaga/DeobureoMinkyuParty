@@ -392,9 +392,8 @@ void dfs(int x){
 	vis[x] = 1;
 	for(auto &i : mf.gph[x]) if(i.cap > 0) dfs(i.pos);
 }
-vector<pi> solve(int n){
-	// i - j cut : i - j minimum edge cost. 0 based. 
-	vector<pi> ret(n); // if i!=0, stores pair(parent,cost)
+vector<pi> solve(int n){ // i - j cut : i - j minimum edge cost. 0 based. 
+	vector<pi> ret(n); // if i > 0, stores pair(parent,cost)
 	for(int i=1; i<n; i++){
 		for(auto &j : edgs){
 			mf.add_edge(j.s, j.e, j.x);
@@ -413,235 +412,296 @@ vector<pi> solve(int n){
 	return ret;
 }
 \end{minted}
-\subsection {Edmond's Blossom Algorithm for General Matching (\WIP)}
+\subsection {Blossom Algorithm for General Matching}
 \begin{minted}{cpp}
-// by kcm1700
-// time complexity: O(M |E| alpha(|V|,|E|)) 
-struct DisjointSet{
-	vector<int> parent, cnt;
-	DisjointSet() { }
-
-	DisjointSet(int n) : cnt(n, 1) {
-		parent.reserve(n);
-		for(int i = 0; i < n; i++) parent.push_back(i);
+const int MAXN = 2020 + 1;
+struct GM { // 1-based Vertex index
+	int vis[MAXN], par[MAXN], orig[MAXN], match[MAXN], aux[MAXN], t, N;
+	vector<int> conn[MAXN];
+	queue<int> Q; 
+	void addEdge(int u, int v) {
+		conn[u].push_back(v); conn[v].push_back(u);
 	}
-
-	void reset(int sz) {
-		parent.clear(); cnt.clear();
-		for(int i = 0; i < sz; i++) {
-			parent.push_back(i);
-			cnt.push_back(1);
+	void init(int n) {
+		N = n; t = 0;
+		for(int i=0; i<=n; ++i) {
+			conn[i].clear(); 
+			match[i] = aux[i] = par[i] = 0;
 		}
 	}
-
-	void increase(int sz) {
-		int base = parent.size();
-		for(int i = base; i < base+sz; i++) {
-			parent.push_back(i);
-			cnt.push_back(1);
+	void augment(int u, int v) {
+		int pv = v, nv;
+		do {
+			pv = par[v]; nv = match[pv];
+			match[v] = pv; match[pv] = v;
+			v = nv;
+		} while(u != pv);
+	}
+	int lca(int v, int w) {
+		++t;
+		while(true) {
+			if(v) {
+				if(aux[v] == t) return v; aux[v] = t;
+				v = orig[par[match[v]]];
+			}
+			swap(v, w);
 		}
 	}
-
-	int find(int p) {
-		int np = p;
-		while(p != parent[p]) p = parent[p];
-		while(np != parent[np]) {
-			int tmp = parent[np];
-			parent[np] = p;
-			np = tmp;
-		}
-		return p;
-	}
-
-	void merge(int a, int b) {
-		a = find(a), b = find(b);
-		if (a == b)
-			return;
-		if (cnt[a] > cnt[b]) {
-			cnt[a] += cnt[b];
-			parent[b] = a;
-		} else {
-			cnt[b] += cnt[a];
-			parent[a] = b;
+	void blossom(int v, int w, int a) {
+		while(orig[v] != a) {
+			par[v] = w; w = match[v];
+			if(vis[w] == 1) Q.push(w), vis[w] = 0;
+			orig[v] = orig[w] = a;
+			v = par[w];
 		}
 	}
-};
-
-struct MaxMatching{
-	int n;
-	vector<vector<int>> gnext;
-	vector<int> matched;
-	int vcnt;
-
-	MaxMatching(int n) : n(n), gnext(n), matched(n, -1){ }
-
-	void AddEdge(int a, int b) {
-		gnext[a].push_back(b);
-		gnext[b].push_back(a);
+	bool bfs(int u) {
+		fill(vis+1, vis+1+N, -1); iota(orig + 1, orig + N + 1, 1);
+		Q = queue<int> (); Q.push(u); vis[u] = 0;
+		while(!Q.empty()) {
+			int v = Q.front(); Q.pop();
+			for(int x: conn[v]) {
+				if(vis[x] == -1) {
+					par[x] = v; vis[x] = 1;
+					if(!match[x]) return augment(u, x), true;
+					Q.push(match[x]); vis[match[x]] = 0;
+				}
+				else if(vis[x] == 0 && orig[v] != orig[x]) {
+					int a = lca(orig[v], orig[x]);
+					blossom(x, v, a); blossom(v, x, a);
+				}
+			}
+		}
+		return false;
 	}
-
 	int Match() {
 		int ans = 0;
-		while(findAugment()) ans++;
+		//find random matching (not necessary, constant improvement)
+		vector<int> V(N-1); iota(V.begin(), V.end(), 1);
+		shuffle(V.begin(), V.end(), mt19937(0x94949));
+		for(auto x: V) if(!match[x]){
+			for(auto y: conn[x]) if(!match[y]) {
+				match[x] = y, match[y] = x;
+				++ans; break;
+			}
+		}
+		for(int i=1; i<=N; ++i) if(!match[i] && bfs(i)) ++ans;
 		return ans;
-	}
-
-	vector<int> parent; // shrunken -> real
-	vector<int> forest;
-	vector<int> level;
-	vector<pair<int,int>> bridge;
-	queue<int> q;
-	DisjointSet blossomSet;
-	vector<int> origin; // blossomSet number to -> origin vertex
-	vector<int> ancestorChecker;
-	int ancestorCheckerValue;
-
-	vector<int> marker;
-	void markBlossomPath(int vv, pair<int,int> vu, int ancestor){
-		int p = vv;
-		marker.clear();
-		while(p != ancestor) {
-			int np;
-			np = origin[blossomSet.find(parent[p])];
-			marker.push_back(p);
-			p = np;
-
-			np = origin[blossomSet.find(parent[p])];
-			marker.push_back(p);
-			bridge[p] = vu; // need original vertex number
-			q.push(p); // odd level edges were not considered
-			p = np;
-		}
-		for(auto x : marker) blossomSet.merge(ancestor, x);
-		origin[blossomSet.find(ancestor)] = ancestor;
-	}
-
-	void mergeBlossom(int vv, int uu, int v, int u){
-		if (uu == vv) return;
-		++ancestorCheckerValue;
-		int p1 = uu, p2 = vv;
-		int ancestor = -1;
-		for(;;) {
-			if (p1 >= 0) {
-				if (ancestorChecker[p1] == ancestorCheckerValue) {
-					ancestor = p1;
-					break;
-				}
-				ancestorChecker[p1] = ancestorCheckerValue;
-				if (parent[p1] >= 0) p1 = origin[blossomSet.find(parent[p1])]; else p1 = -1;
-			}
-			if (p2 >= 0) {
-				if (ancestorChecker[p2] == ancestorCheckerValue) {
-					ancestor = p2;
-					break;
-				}
-				ancestorChecker[p2] = ancestorCheckerValue;
-				if (parent[p2] >= 0) p2 = origin[blossomSet.find(parent[p2])]; else p2 = -1;
-			}
-		}
-		markBlossomPath(uu, make_pair(u, v), ancestor);
-		markBlossomPath(vv, make_pair(v, u), ancestor);
-	}
-
-	vector<int> augmentPathLink;
-
-	void getRootPath(int v, int w, bool reversed){
-		if (v == w) return;
-		if (level[v] & 1) {
-			// odd. use bridge
-			int x, y, mate = matched[v];
-			tie(x,y) = tie(bridge[v].first, bridge[v].second);
-			getRootPath(x, mate, !reversed);
-			getRootPath(y, w, reversed);
-			if (reversed) {
-				augmentPathLink[y] = x;
-				augmentPathLink[mate] = v;
-			} else {
-				augmentPathLink[v] = mate;
-				augmentPathLink[x] = y;
-			}
-		} else {
-			// even
-			int mate = matched[v];
-			getRootPath(parent[mate], w, reversed);
-			if (reversed) {
-				augmentPathLink[parent[mate]] = mate;
-				augmentPathLink[mate] = v;
-			} else {
-				augmentPathLink[v] = mate;
-				augmentPathLink[mate] = parent[mate];
-			}
-		}
-	}
-
-	void augmentPath(int v, int w) {
-		augmentPathLink = vector<int>(n,-1);
-		int x = forest[v];
-		int y = forest[w];
-		getRootPath(v,x,true);
-		getRootPath(w,y,false);
-		augmentPathLink[v] = w;
-		int p = x;
-		for(;;) {
-			int q = augmentPathLink[p];
-			matched[p] = q;
-			matched[q] = p;
-			if (q == y) break;
-			p = augmentPathLink[q];
-		}
-	}
-
-	bool findAugment() {
-		parent = vector<int>(n,-1);
-		forest = vector<int>(n,-1);
-		level = vector<int>(n);
-		bridge = vector<pair<int,int>>(n,make_pair(-1,-1));
-		q = queue<int>();
-		blossomSet.reset(n);
-		origin = vector<int>(n);
-		ancestorChecker = vector<int>(n);
-		ancestorCheckerValue = 0;
-
-		for(int i = 0; i < n; i++) {
-			origin[i] = i;
-			if (matched[i] == -1) {
-				forest[i] = i;
-				q.push(i);
-			}
-		}
-		bool foundPath = false;
-		while(!q.empty() && !foundPath) {
-			int v = q.front(); q.pop();
-			for(auto u : gnext[v]) {
-				int vv = origin[blossomSet.find(v)];
-				int uu = origin[blossomSet.find(u)];
-				if (forest[uu] == -1) {
-					// assert(u == uu)
-					parent[uu] = v;
-					forest[uu] = forest[vv];
-					level [uu] = level [vv] + 1;
-					parent[matched[uu]] = uu;
-					forest[matched[uu]] = forest[vv];
-					level [matched[uu]] = level [vv] + 2;
-					q.push(matched[uu]);
-				} else if (level[uu]&1) {
-					// odd level
-				} else if (forest[uu] != forest[vv]){
-					// found path. both are even level
-					foundPath = true;
-					augmentPath(v,u);
-					break;
-				} else {
-					// blossom formed
-					mergeBlossom(vv, uu, v, u);
-				}
-			}
-		}
-		return foundPath;
 	}
 };
 \end{minted}
-
+\subsection {Blossom Algorithm for Weighted General Matching}
+\begin{minted}{cpp}
+// https://github.com/tzupengwang/PECaveros/blob/master/
+// codebook/graph/BorrowedGeneralWeightedMatching.cpp
+// N^3 (but fast in practice)
+struct WeightGraph { 
+  static const int INF = INT_MAX;
+  static const int N = 514;
+  struct edge{
+	int u,v,w; edge(){}
+	edge(int ui,int vi,int wi)
+	  :u(ui),v(vi),w(wi){}
+  };
+  int n,n_x;
+  edge g[N*2][N*2];
+  int lab[N*2];
+  int match[N*2],slack[N*2],st[N*2],pa[N*2];
+  int flo_from[N*2][N+1],S[N*2],vis[N*2];
+  vector<int> flo[N*2];
+  queue<int> q;
+  int e_delta(const edge &e){
+	return lab[e.u]+lab[e.v]-g[e.u][e.v].w*2;
+  }
+  void update_slack(int u,int x){
+	if(!slack[x]||e_delta(g[u][x])<e_delta(g[slack[x]][x]))slack[x]=u;
+  }
+  void set_slack(int x){
+	slack[x]=0;
+	for(int u=1;u<=n;++u)
+	  if(g[u][x].w>0&&st[u]!=x&&S[st[u]]==0)
+		update_slack(u,x);
+  }
+  void q_push(int x){
+	if(x<=n)q.push(x);
+	else for(size_t i=0;i<flo[x].size();i++)
+	  q_push(flo[x][i]);
+  }
+  void set_st(int x,int b){
+	st[x]=b;
+	if(x>n)for(size_t i=0;i<flo[x].size();++i)
+	  set_st(flo[x][i],b);
+  }
+  int get_pr(int b,int xr){
+	int pr=find(flo[b].begin(),flo[b].end(),xr)-flo[b].begin();
+	if(pr%2==1){
+	  reverse(flo[b].begin()+1,flo[b].end());
+	  return (int)flo[b].size()-pr;
+	}else return pr;
+  }
+  void set_match(int u,int v){
+	match[u]=g[u][v].v;
+	if(u<=n) return;
+	edge e=g[u][v];
+	int xr=flo_from[u][e.u],pr=get_pr(u,xr);
+	for(int i=0;i<pr;++i)set_match(flo[u][i],flo[u][i^1]);
+	set_match(xr,v);
+	rotate(flo[u].begin(),flo[u].begin()+pr,flo[u].end());
+  }
+  void augment(int u,int v){
+	for(;;){
+	  int xnv=st[match[u]];
+	  set_match(u,v);
+	  if(!xnv)return;
+	  set_match(xnv,st[pa[xnv]]);
+	  u=st[pa[xnv]],v=xnv;
+	}
+  }
+  int get_lca(int u,int v){
+	static int t=0;
+	for(++t;u||v;swap(u,v)){
+	  if(u==0)continue;
+	  if(vis[u]==t)return u;
+	  vis[u]=t;
+	  u=st[match[u]];
+	  if(u)u=st[pa[u]];
+	}
+	return 0;
+  }
+  void add_blossom(int u,int lca,int v){
+	int b=n+1;
+	while(b<=n_x&&st[b])++b;
+	if(b>n_x)++n_x;
+	lab[b]=0,S[b]=0;
+	match[b]=match[lca];
+	flo[b].clear();
+	flo[b].push_back(lca);
+	for(int x=u,y;x!=lca;x=st[pa[y]])
+	  flo[b].push_back(x),flo[b].push_back(y=st[match[x]]),q_push(y);
+	reverse(flo[b].begin()+1,flo[b].end());
+	for(int x=v,y;x!=lca;x=st[pa[y]])
+	  flo[b].push_back(x),flo[b].push_back(y=st[match[x]]),q_push(y);
+	set_st(b,b);
+	for(int x=1;x<=n_x;++x)g[b][x].w=g[x][b].w=0;
+	for(int x=1;x<=n;++x)flo_from[b][x]=0;
+	for(size_t i=0;i<flo[b].size();++i){
+	  int xs=flo[b][i];
+	  for(int x=1;x<=n_x;++x)
+		if(g[b][x].w==0||e_delta(g[xs][x])<e_delta(g[b][x]))
+		  g[b][x]=g[xs][x],g[x][b]=g[x][xs];
+	  for(int x=1;x<=n;++x)
+		if(flo_from[xs][x])flo_from[b][x]=xs;
+	}
+	set_slack(b);
+  }
+  void expand_blossom(int b){
+	for(size_t i=0;i<flo[b].size();++i)
+	  set_st(flo[b][i],flo[b][i]);
+	int xr=flo_from[b][g[b][pa[b]].u],pr=get_pr(b,xr);
+	for(int i=0;i<pr;i+=2){
+	  int xs=flo[b][i],xns=flo[b][i+1];
+	  pa[xs]=g[xns][xs].u;
+	  S[xs]=1,S[xns]=0;
+	  slack[xs]=0,set_slack(xns);
+	  q_push(xns);
+	}
+	S[xr]=1,pa[xr]=pa[b];
+	for(size_t i=pr+1;i<flo[b].size();++i){
+	  int xs=flo[b][i];
+	  S[xs]=-1,set_slack(xs);
+	}
+	st[b]=0;
+  }
+  bool on_found_edge(const edge &e){
+	int u=st[e.u],v=st[e.v];
+	if(S[v]==-1){
+	  pa[v]=e.u,S[v]=1;
+	  int nu=st[match[v]];
+	  slack[v]=slack[nu]=0;
+	  S[nu]=0,q_push(nu);
+	}else if(S[v]==0){
+	  int lca=get_lca(u,v);
+	  if(!lca)return augment(u,v),augment(v,u),true;
+	  else add_blossom(u,lca,v);
+	}
+	return false;
+  }
+  bool matching(){
+	memset(S+1,-1,sizeof(int)*n_x);
+	memset(slack+1,0,sizeof(int)*n_x);
+	q=queue<int>();
+	for(int x=1;x<=n_x;++x)
+	  if(st[x]==x&&!match[x])pa[x]=0,S[x]=0,q_push(x);
+	if(q.empty())return false;
+	for(;;){
+	  while(q.size()){
+		int u=q.front();q.pop();
+		if(S[st[u]]==1)continue;
+		for(int v=1;v<=n;++v)
+		  if(g[u][v].w>0&&st[u]!=st[v]){
+			if(e_delta(g[u][v])==0){
+			  if(on_found_edge(g[u][v]))return true;
+			}else update_slack(u,st[v]);
+		  }
+	  }
+	  int d=INF;
+	  for(int b=n+1;b<=n_x;++b)
+		if(st[b]==b&&S[b]==1)d=min(d,lab[b]/2);
+	  for(int x=1;x<=n_x;++x)
+		if(st[x]==x&&slack[x]){
+		  if(S[x]==-1)d=min(d,e_delta(g[slack[x]][x]));
+		  else if(S[x]==0)d=min(d,e_delta(g[slack[x]][x])/2);
+		}
+	  for(int u=1;u<=n;++u){
+		if(S[st[u]]==0){
+		  if(lab[u]<=d)return 0;
+		  lab[u]-=d;
+		}else if(S[st[u]]==1)lab[u]+=d;
+	  }
+	  for(int b=n+1;b<=n_x;++b)
+		if(st[b]==b){
+		  if(S[st[b]]==0)lab[b]+=d*2;
+		  else if(S[st[b]]==1)lab[b]-=d*2;
+		}
+	  q=queue<int>();
+	  for(int x=1;x<=n_x;++x)
+		if(st[x]==x&&slack[x]&&st[slack[x]]!=x&&e_delta(g[slack[x]][x])==0)
+		  if(on_found_edge(g[slack[x]][x]))return true;
+	  for(int b=n+1;b<=n_x;++b)
+		if(st[b]==b&&S[b]==1&&lab[b]==0)expand_blossom(b);
+	}
+	return false;
+  }
+  pair<long long,int> solve(){
+	memset(match+1,0,sizeof(int)*n);
+	n_x=n;
+	int n_matches=0;
+	long long tot_weight=0;
+	for(int u=0;u<=n;++u)st[u]=u,flo[u].clear();
+	int w_max=0;
+	for(int u=1;u<=n;++u)
+	  for(int v=1;v<=n;++v){
+		flo_from[u][v]=(u==v?u:0);
+		w_max=max(w_max,g[u][v].w);
+	  }
+	for(int u=1;u<=n;++u)lab[u]=w_max;
+	while(matching())++n_matches;
+	for(int u=1;u<=n;++u)
+	  if(match[u]&&match[u]<u)
+		tot_weight+=g[u][match[u]].w;
+	return make_pair(tot_weight,n_matches);
+  }
+  void add_edge( int ui , int vi , int wi ){
+	g[ui][vi].w = g[vi][ui].w = wi;
+  }
+  void init( int _n ){
+	n = _n;
+	for(int u=1;u<=n;++u)
+	  for(int v=1;v<=n;++v)
+		g[u][v]=edge(u,v,0);
+  }
+} graph;
+\end{minted}
 
 \section{Graph}
 \subsection {2-SAT}
@@ -1216,44 +1276,44 @@ inline double polygon_area(double x1, double y1, double x2, double y2){ //Shoela
 \subsection{Smallest Enclosing Circle / Sphere}
 \begin{minted}{cpp}
 namespace cover_2d{
-    double eps = 1e-9;
-    using Point = complex<double>;
-    struct Circle{ Point p; double r; };
-    double dist(Point p, Point q){ return abs(p-q); }
-    double area2(Point p, Point q){ return (conj(p)*q).imag();}
-    bool in(const Circle& c, Point p){ return dist(c.p, p) < c.r + eps; }
-    Circle INVAL = Circle{Point(0, 0), -1};
-    Circle mCC(Point a, Point b, Point c){
-        b -= a; c -= a; 
-        double d = 2*(conj(b)*c).imag(); if(abs(d)<eps) return INVAL;
-        Point ans = (c*norm(b) - b*norm(c)) * Point(0, -1) / d;
-        return Circle{a + ans, abs(ans)};
-    }
-    Circle solve(vector<Point> p) {
-        mt19937 gen(0x94949); shuffle(p.begin(), p.end(), gen);
-        Circle c = INVAL;
-        for(int i=0; i<p.size(); ++i) if(c.r<0 ||!in(c, p[i])){
-            c = Circle{p[i], 0};
-            for(int j=0; j<=i; ++j) if(!in(c, p[j])){
-                Circle ans{(p[i]+p[j])*0.5, dist(p[i], p[j])*0.5};
-                if(c.r == 0) {c = ans; continue;}
-                Circle l, r; l = r = INVAL;
-                Point pq = p[j]-p[i];
-                for(int k=0; k<=j; ++k) if(!in(ans, p[k])) {
-                    double a2 = area2(pq, p[k]-p[i]);
-                    Circle c = mCC(p[i], p[j], p[k]);
-                    if(c.r<0) continue;
-                    else if(a2 > 0 && (l.r<0||area2(pq, c.p-p[i]) > area2(pq, l.p-p[i]))) l = c;
-                    else if(a2 < 0 && (r.r<0||area2(pq, c.p-p[i]) < area2(pq, r.p-p[i]))) r = c;
-                }
-                if(l.r<0&&r.r<0) c = ans;
-                else if(l.r<0) c = r;
-                else if(r.r<0) c = l;
-                else c = l.r<=r.r?l:r;
-            }
-        }
-        return c;
-    }
+	double eps = 1e-9;
+	using Point = complex<double>;
+	struct Circle{ Point p; double r; };
+	double dist(Point p, Point q){ return abs(p-q); }
+	double area2(Point p, Point q){ return (conj(p)*q).imag();}
+	bool in(const Circle& c, Point p){ return dist(c.p, p) < c.r + eps; }
+	Circle INVAL = Circle{Point(0, 0), -1};
+	Circle mCC(Point a, Point b, Point c){
+		b -= a; c -= a; 
+		double d = 2*(conj(b)*c).imag(); if(abs(d)<eps) return INVAL;
+		Point ans = (c*norm(b) - b*norm(c)) * Point(0, -1) / d;
+		return Circle{a + ans, abs(ans)};
+	}
+	Circle solve(vector<Point> p) {
+		mt19937 gen(0x94949); shuffle(p.begin(), p.end(), gen);
+		Circle c = INVAL;
+		for(int i=0; i<p.size(); ++i) if(c.r<0 ||!in(c, p[i])){
+			c = Circle{p[i], 0};
+			for(int j=0; j<=i; ++j) if(!in(c, p[j])){
+				Circle ans{(p[i]+p[j])*0.5, dist(p[i], p[j])*0.5};
+				if(c.r == 0) {c = ans; continue;}
+				Circle l, r; l = r = INVAL;
+				Point pq = p[j]-p[i];
+				for(int k=0; k<=j; ++k) if(!in(ans, p[k])) {
+					double a2 = area2(pq, p[k]-p[i]);
+					Circle c = mCC(p[i], p[j], p[k]);
+					if(c.r<0) continue;
+					else if(a2 > 0 && (l.r<0||area2(pq, c.p-p[i]) > area2(pq, l.p-p[i]))) l = c;
+					else if(a2 < 0 && (r.r<0||area2(pq, c.p-p[i]) < area2(pq, r.p-p[i]))) r = c;
+				}
+				if(l.r<0&&r.r<0) c = ans;
+				else if(l.r<0) c = r;
+				else if(r.r<0) c = l;
+				else c = l.r<=r.r?l:r;
+			}
+		}
+		return c;
+	}
 };
 
 namespace cover_3d{
@@ -1652,62 +1712,62 @@ namespace fft{
 #pragma GCC target("avx2")
 #pragma GCC target("fma")
 __m256d mult(__m256d a, __m256d b){
-    __m256d c = _mm256_movedup_pd(a);
-    __m256d d = _mm256_shuffle_pd(a, a, 15);
-    __m256d cb = _mm256_mul_pd(c, b);
-    __m256d db = _mm256_mul_pd(d, b);
-    __m256d e = _mm256_shuffle_pd(db, db, 5);
-    __m256d r = _mm256_addsub_pd(cb, e);
-    return r;    
+	__m256d c = _mm256_movedup_pd(a);
+	__m256d d = _mm256_shuffle_pd(a, a, 15);
+	__m256d cb = _mm256_mul_pd(c, b);
+	__m256d db = _mm256_mul_pd(d, b);
+	__m256d e = _mm256_shuffle_pd(db, db, 5);
+	__m256d r = _mm256_addsub_pd(cb, e);
+	return r;    
 }
 void fft(int n, __m128d a[], bool invert){
-    for(int i=1, j=0; i<n; ++i){
-        int bit = n>>1;
-        for(;j>=bit;bit>>=1) j -= bit;
-        j += bit;
-        if(i<j) swap(a[i], a[j]);
-    }
-    for(int len=2; len<=n; len<<=1){
-        double ang = 2*3.14159265358979/len*(invert?-1:1);
-        __m256d wlen; wlen[0] = cos(ang), wlen[1] = sin(ang);
-        for(int i=0; i<n; i += len){
-            __m256d w; w[0] = 1; w[1] = 0;
-            for(int j=0; j<len/2; ++j){
-                w = _mm256_permute2f128_pd(w, w, 0);
-                wlen = _mm256_insertf128_pd(wlen, a[i+j+len/2], 1);
-                w = mult(w, wlen);
-                __m128d vw = _mm256_extractf128_pd(w, 1);
-                __m128d u = a[i+j];
-                a[i+j] = _mm_add_pd(u, vw);
-                a[i+j+len/2] = _mm_sub_pd(u, vw);
-            }
-        }
-    }
-    if(invert){
-        __m128d inv; inv[0] = inv[1] = 1.0/n;
-        for(int i=0; i<n; ++i) a[i] = _mm_mul_pd(a[i], inv);
-    }
+	for(int i=1, j=0; i<n; ++i){
+		int bit = n>>1;
+		for(;j>=bit;bit>>=1) j -= bit;
+		j += bit;
+		if(i<j) swap(a[i], a[j]);
+	}
+	for(int len=2; len<=n; len<<=1){
+		double ang = 2*3.14159265358979/len*(invert?-1:1);
+		__m256d wlen; wlen[0] = cos(ang), wlen[1] = sin(ang);
+		for(int i=0; i<n; i += len){
+			__m256d w; w[0] = 1; w[1] = 0;
+			for(int j=0; j<len/2; ++j){
+				w = _mm256_permute2f128_pd(w, w, 0);
+				wlen = _mm256_insertf128_pd(wlen, a[i+j+len/2], 1);
+				w = mult(w, wlen);
+				__m128d vw = _mm256_extractf128_pd(w, 1);
+				__m128d u = a[i+j];
+				a[i+j] = _mm_add_pd(u, vw);
+				a[i+j+len/2] = _mm_sub_pd(u, vw);
+			}
+		}
+	}
+	if(invert){
+		__m128d inv; inv[0] = inv[1] = 1.0/n;
+		for(int i=0; i<n; ++i) a[i] = _mm_mul_pd(a[i], inv);
+	}
 }
 vector<int64_t> multiply(vector<int64_t>& v, vector<int64_t>& w){
-    int n = 2; while(n < v.size()+w.size()) n<<=1; 
-    __m128d* fv = new __m128d[n];
-    for(int i=0; i<n; ++i) fv[i][0] = fv[i][1] = 0;
-    for(int i=0; i<v.size(); ++i) fv[i][0] = v[i];
-    for(int i=0; i<w.size(); ++i) fv[i][1] = w[i];
-    fft(n, fv, 0); //(a+bi) is stored in FFT
-    for(int i=0; i<n; i += 2){
-        __m256d a;
-        a = _mm256_insertf128_pd(a, fv[i], 0);
-        a = _mm256_insertf128_pd(a, fv[i+1], 1);
-        a = mult(a, a);
-        fv[i] = _mm256_extractf128_pd(a, 0);
-        fv[i+1] = _mm256_extractf128_pd(a, 1);
-    }
-    fft(n, fv, 1); 
-    vector<int64_t> ret(n);
-    for(int i=0; i<n; ++i) ret[i] = (int64_t)round(fv[i][1]/2);
-    delete[] fv;
-    return ret;
+	int n = 2; while(n < v.size()+w.size()) n<<=1; 
+	__m128d* fv = new __m128d[n];
+	for(int i=0; i<n; ++i) fv[i][0] = fv[i][1] = 0;
+	for(int i=0; i<v.size(); ++i) fv[i][0] = v[i];
+	for(int i=0; i<w.size(); ++i) fv[i][1] = w[i];
+	fft(n, fv, 0); //(a+bi) is stored in FFT
+	for(int i=0; i<n; i += 2){
+		__m256d a;
+		a = _mm256_insertf128_pd(a, fv[i], 0);
+		a = _mm256_insertf128_pd(a, fv[i+1], 1);
+		a = mult(a, a);
+		fv[i] = _mm256_extractf128_pd(a, 0);
+		fv[i+1] = _mm256_extractf128_pd(a, 1);
+	}
+	fft(n, fv, 1); 
+	vector<int64_t> ret(n);
+	for(int i=0; i<n; ++i) ret[i] = (int64_t)round(fv[i][1]/2);
+	delete[] fv;
+	return ret;
 }
 
 \end{minted}
@@ -1892,7 +1952,7 @@ bool solve(int a, int p, int &x, int &y) {
 			int ss = (((lint)(s * s) % p) * a) % p;
 			for(int i=0;i<t-step;i++) ss=(lint)ss*ss%p;;
 			if (ss + 1 == p) s = (s * pb) % p;
-      pb = ((lint)pb * pb) % p;
+	  pb = ((lint)pb * pb) % p;
 		} x = ((lint)s * a) % p; y = p - x;
 	} return true; 
 }
@@ -2061,20 +2121,20 @@ static char buf[1 << 19]; // size : any number geq than 1024
 static int idx = 0;
 static int bytes = 0;
 static inline int _read() {
-    if (!bytes || idx == bytes) {
-        bytes = (int)fread(buf, sizeof(buf[0]), sizeof(buf), stdin);
-        idx = 0;
-    }
-    return buf[idx++];
+	if (!bytes || idx == bytes) {
+		bytes = (int)fread(buf, sizeof(buf[0]), sizeof(buf), stdin);
+		idx = 0;
+	}
+	return buf[idx++];
 }
 static inline int _readInt() {
-    int x = 0, s = 1;
-    int c = _read();
-    while (c <= 32) c = _read();
-    if (c == '-') s = -1, c = _read();
-    while (c > 32) x = 10 * x + (c - '0'), c = _read();
-    if (s < 0) x = -x;
-    return x;
+	int x = 0, s = 1;
+	int c = _read();
+	while (c <= 32) c = _read();
+	if (c == '-') s = -1, c = _read();
+	while (c > 32) x = 10 * x + (c - '0'), c = _read();
+	if (s < 0) x = -x;
+	return x;
 }
 \end{minted}
 \subsection {OSRank in g++}
@@ -2127,6 +2187,10 @@ int main(){
 
 #include <bits/stdc++.h> // magic header
 using namespace std; // magic namespace
+
+struct StupidGCCCantEvenCompileThisSimpleCode{
+	pair<int, int> array[1000000];
+}; // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68203
 
 // how to use rand (in 2017)
 mt19937 rng(0x14004);
