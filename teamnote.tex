@@ -51,8 +51,10 @@
 s
 \pagebreak
 
-%\section{Quote}
 
+ \textcolor{red}{\textbf{ALL BELOW HERE ARE USELESS IF YOU READ THE STATEMENT WRONG}}
+	
+\section{Quote}
 럭스를 럭스답게 든든한 연습헬팟 더불어민규당 
 
 
@@ -376,9 +378,76 @@ struct circ{
 }circ;
 \end{minted}
 
-\subsection {Min Cost Circulation (\WIP)}
-\added
+\subsection {Min Cost Circulation}
+\revised
+\begin{minted}{cpp}
+// Cycle canceling (Dual of successive shortest path)
+// Time complexity is ridiculously high (F * maxC * nm^2). But runs reasonably in practice (V = 70 in 1s)
 
+struct cost_circ{
+	struct edg{ int pos, cap, rev, cost; };
+	vector<edg> gph[MAXN];
+	void clear(){ for(int i=0; i<MAXN; i++) gph[i].clear(); }
+	void add_edge(int s, int e, int x, int c){
+		gph[s].push_back({e, x, (int)gph[e].size(), c});
+		gph[e].push_back({s, 0, (int)gph[s].size()-1, -c});
+	}
+	int dist[MAXN], par[MAXN], pae[MAXN];
+	int negative_cycle(int n){
+		bool mark[MAXN] = {};
+		memset(dist, 0, sizeof(dist));
+		int upd = -1;
+		for(int i=0; i<=n; i++){
+			for(int j=0; j<n; j++){
+				int idx = 0;
+				for(auto &k : gph[j]){
+					if(k.cap > 0 && dist[k.pos] > dist[j] + k.cost){
+						dist[k.pos] = dist[j] + k.cost;
+						par[k.pos] = j;
+						pae[k.pos] = idx;
+						if(i == n){
+							upd = j;
+							while(!mark[upd]){
+								mark[upd] = 1;
+								upd = par[upd];
+							}
+							return upd;
+						}
+					}
+					idx++;
+				}
+			}
+		}
+		return -1;
+	}
+	int match(int n){
+		int rt = -1;
+		int ans = 0;
+		while(~(rt = negative_cycle(n))){
+			bool mark[MAXN] = {};
+			vector<pi> cyc;
+			while(!mark[rt]){
+				cyc.push_back(pi(par[rt], pae[rt]));
+				mark[rt] = 1;
+				rt = par[rt];
+			}
+			reverse(cyc.begin(), cyc.end());
+			int capv = 1e9;
+			for(auto &i : cyc){
+				auto e = &gph[i.first][i.second];
+				capv = min(capv, e->cap);
+			}
+			for(auto &i : cyc){
+				auto e = &gph[i.first][i.second];
+				e->cap -= capv;
+				gph[e->pos][e->rev].cap += capv;
+				ans += e->cost * capv;
+			}
+		}
+		return ans;
+	}
+}circ;
+\end{minted}
 \subsection {Gomory-Hu Tree}
 \begin{minted}{cpp}
 struct edg{ int s, e, x; };
@@ -412,7 +481,7 @@ vector<pi> solve(int n){ // i - j cut : i - j minimum edge cost. 0 based.
 	return ret;
 }
 \end{minted}
-\subsection {Blossom Algorithm for General Matching}
+\subsection{Blossom Algorithm for General Matching}
 \begin{minted}{cpp}
 const int MAXN = 2020 + 1;
 struct GM { // 1-based Vertex index
@@ -1036,9 +1105,6 @@ namespace stoer_wagner{
 };
 \end{minted}
 
-\subsection{K-shortest path (\WIP)}
-\added
-
 \subsection {Edmond's Directed MST (\WIP)}
 \added
 
@@ -1168,7 +1234,7 @@ void solve(int n, int *str, int *ret){
 }
 \end{minted}
 
-\subsection{Palindromic Tree (\WIP)}
+\subsection{Minimum Palindromic Factorization (\WIP)}
 \added
 \subsection{Circular LCS}
 \begin{minted}{cpp}
@@ -2087,12 +2153,16 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
 \section{Miscellaneous}
 \subsection {Popular Optimization Technique}
 \begin{itemize}
-	\item CHT. DnC optimization. Mo's \sout{algorithm} trick (on tree). IOI 2016 Aliens trick. IOI 2009 Hiring trick. 
+	
+	\item \textcolor{red}{\textbf{NO. THE PROBLEM IS ACTUALLY EASY. YOU JUST READ IT WRONG}}
+	\item Add or remove the constraints / Simplify the problem / Solve simillar problem
+	\item "Colliding ants problem" : Find a better way to describe the situation
+	\item CHT. DnC optimization. Mo's \sout{algorithm} trick (on tree). IOI 2016 Aliens trick. IOI 2009 Regions trick.
 	\item Knuth's $O(n^2)$ Optimal BST : minimize $D_{i, j} = Min_{i \leq k < j}(D_{i, k} + D_{k+1, j}) + C_{i, j}$. Quadrangle Inequality : $C_{a, c} + C_{b, d} \leq C_{a, d} + C_{b, c}$, $C_{b, c} \leq C_{a, d}$. Now monotonicity holds. 
 	\item Sqrt batch processing - Save queries in buffer, and update in every sqrt steps (cf : IOI 2011 Elephant. hyea calls it "ainta technique")
 	\item Dynamic insertion in static set (Make $O(lgn)$ copy. Merge like binomial heap.)
 	\item Offline insertion / deletion in insert-only set (Pair insertion-deletion operation, and regard it as range query)
-
+	\item Atcoder Median Pyramid : Reduce the input to binary, and solve the easier problem.
 \end{itemize}
 
 \subsection {Bit Twiddling Hack}
