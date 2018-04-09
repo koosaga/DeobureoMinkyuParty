@@ -379,7 +379,6 @@ struct circ{
 \end{minted}
 
 \subsection {Min Cost Circulation}
-\revised
 \begin{minted}{cpp}
 // Cycle canceling (Dual of successive shortest path)
 // Time complexity is ridiculously high (F * maxC * nm^2). But runs reasonably in practice (V = 70 in 1s)
@@ -774,6 +773,7 @@ struct WeightGraph {
 
 \section{Graph}
 \subsection {2-SAT}
+\revised
 \begin{minted}{cpp}
 strongly_connected scc;
 int n; // = number of clauses
@@ -932,6 +932,7 @@ void cut(node *p){
 \end{minted}
 
 \subsection{Offline Dynamic MST}
+\revised
 \begin{minted}{cpp}
 int n, m, q;
 int st[MAXN], ed[MAXN], cost[MAXN], chk[MAXN];
@@ -1105,12 +1106,76 @@ namespace stoer_wagner{
 };
 \end{minted}
 
-\subsection {Edmond's Directed MST (\WIP)}
-\added
-
-\subsection {Vizing Theorem for Edge Coloring (\WIP)}
-\added
-
+\subsection {Edmond's Directed MST}
+\begin{minted}{cpp}
+// starts from node 0. assumes there exists at least one dmst.
+// edge is reversed : if there is edge s -> e, INSERT IN gph[e]
+struct edge { int to, cost, id; };
+using elist = vector<edge>;
+void dmst(vector<elist> &g, vector<int>& res) {
+	const int n = g.size();
+	vector<edge*> to(n);
+	vector<int> u(n, 0);
+	for (int i = 1; i < n; ++i) {
+		int mn = g[i][0].cost;
+		for (int j = 0; j < g[i].size(); ++j)
+			mn = min(mn, g[i][j].cost);
+		for (int j = 0; j < g[i].size(); ++j) {
+			if (g[i][j].cost == mn)
+				to[i] = &g[i][j];
+			g[i][j].cost -= mn;
+		}
+	}
+	for (int i = 1; i < n; ++i) {
+		if (u[i]) continue;
+		int x = i;
+		vector<int> order(1, x);
+		u[x] = 1;
+		while (to[x]->to > 0 && u[to[x]->to] == 0) {
+			x = to[x]->to;
+			u[x] = 1;
+			order.push_back(x);
+		}
+		int y = to[x]->to;
+		vector<int> cycle(find(order.begin(), order.end(), y), order.end());
+		if (cycle.size() == 0) continue;
+		vector<int> in_cycle(n);
+		for (int j = 0; j < cycle.size(); ++j) in_cycle[cycle[j]] = 1;
+		vector<int> nw_id(n);
+		for (int j = 1; j < n; ++j) nw_id[j] = nw_id[j - 1] + !in_cycle[j];
+		int nn = n - cycle.size();
+		vector<elist> gn(nn + 1);
+		for (int j = 1; j < n; ++j) {
+			if (in_cycle[j]) {
+				for (int k = 0; k < g[j].size(); ++k)
+					if (!in_cycle[g[j][k].to])
+						gn[nn].push_back({nw_id[g[j][k].to], g[j][k].cost, g[j][k].id});
+			} else {
+				for (int k = 0; k < g[j].size(); ++k)
+					if (in_cycle[g[j][k].to])
+						gn[nw_id[j]].push_back({nn, g[j][k].cost, g[j][k].id});
+					else
+						gn[nw_id[j]].push_back({nw_id[g[j][k].to], g[j][k].cost, g[j][k].id});
+			}
+		}
+		dmst(gn, res);
+		set<int> used_e(res.begin(), res.end());
+		for (int j = 0; j < cycle.size(); ++j) {
+			bool found = false;
+			for (int k = 0; k < g[cycle[j]].size(); ++k)
+				found |= used_e.count(g[cycle[j]][k].id);
+			if (found) {
+				for (int k = 0; k < cycle.size(); ++k) {
+					if (k != j)
+						res.push_back(to[cycle[k]]->id);
+				}
+				return;
+			}
+		}
+	}
+	for (int i = 1; i < n; ++i) res.push_back(to[i]->id);
+}
+\end{minted}
 \section{Strings}
 
 \subsection{Aho-Corasick Algorithm}
@@ -1234,8 +1299,79 @@ void solve(int n, int *str, int *ret){
 }
 \end{minted}
 
-\subsection{Minimum Palindromic Factorization (\WIP)}
-\added
+\subsection{eertree}
+\begin{minted}{cpp}
+namespace eertree{
+	int nxt[MAXN][26];
+	int par[MAXN], len[MAXN], slink[MAXN], ptr[MAXN], diff[MAXN], series[MAXN], piv;
+	void clear(int n = MAXN){
+		memset(par, 0, sizeof(int) * n);
+		memset(len, 0, sizeof(int) * n);
+		memset(slink, 0, sizeof(int) * n);
+		memset(nxt, 0, sizeof(int) * 26 * n);
+		piv = 0;
+	}
+	void init(int n, char *a){
+		par[0] = 0;
+		par[1] = 1;
+		a[0] = -1;
+		len[0] = -1;
+		piv = 1;
+		int cur = 1;
+		for(int i=1; i<=n; i++){
+			while(a[i] != a[i - len[cur] - 1]) cur = slink[cur];
+			if(!nxt[cur][a[i]]){
+				nxt[cur][a[i]] = ++piv;
+				par[piv] = cur;
+				len[piv] = len[cur] + 2;
+				int lnk = slink[cur];
+				while(a[i] != a[i - len[lnk] - 1]){
+					lnk = slink[lnk];
+				}
+				if(nxt[lnk][a[i]]) lnk = nxt[lnk][a[i]];
+				if(len[piv] == 1 || lnk == 0) lnk = 1;
+				slink[piv] = lnk;
+				diff[piv] = len[piv] - len[lnk];
+				if(diff[piv] == diff[lnk]) series[piv] = series[lnk];
+				else series[piv] = piv;
+			}
+			cur = nxt[cur][a[i]];
+			ptr[i] = cur;
+		}
+	}
+	int query(int s, int e){
+		int pos = ptr[e];
+		while(len[pos] >= e - s + 1){
+            if(len[pos] % diff[pos] == (e - s + 1) % diff[pos] &&
+               len[series[pos]] <= e - s + 1) return true;
+            pos = series[pos];
+            pos = slink[pos];
+		}
+		return false;
+	}
+	vector<pi> minimum_partition(int n){ // (odd min, even min)
+		vector<pi> dp(n + 1);
+		vector<pi> series_ans(n + 10);
+		dp[0] = pi(1e9 + 1, 0);
+		for(int i=1; i<=n; i++){
+			dp[i] = pi(1e9 + 1, 1e9);
+			for(int j=ptr[i]; len[j] > 0;){
+				int slv = slink[series[j]];
+				series_ans[j] = dp[i - (len[slv] + diff[j])];
+				if(diff[j] == diff[slink[j]]){
+					series_ans[j].first = min(series_ans[j].first, series_ans[slink[j]].first);
+					series_ans[j].second = min(series_ans[j].second, series_ans[slink[j]].second);
+				}
+				auto val = series_ans[j];
+				dp[i].first = min(dp[i].first, val.second + 1);
+				dp[i].second = min(dp[i].second, val.first + 1);
+				j = slv;
+			}
+		}
+		return dp;
+	}
+};
+\end{minted}
 \subsection{Circular LCS}
 \begin{minted}{cpp}
 string s1, s2;
@@ -1992,50 +2128,122 @@ lint count_primes(lint N) { //less than or equal to
 	return N-1 - rec(N, K) + prec[P[K]];
 }
 \end{minted}
-\subsection{Discrete Square Root}
-
+\subsection{Discrete Kth root}
 \begin{minted}{cpp}
-// https://github.com/tzupengwang/PECaveros/
-// blob/master/codebook/math/DiscreteSqrt.cpp
-void calcH(int &t, int &h, const int p) {
-	int tmp=p-1; for(t=0;(tmp&1)==0;tmp/=2) t++; h=tmp;
+/* code source : https://github.com/tzupengwang/PECaveros/blob/
+master/codebook/math/DiscreteKthsqrt.cpp
+ * Solve x for x^P = A mod Q
+ * (P, Q-1) = 1 -> P^-1 mod (Q-1) exists
+ * x has solution iff A^((Q-1) / P) = 1 mod Q
+ * PP | (Q-1) -> P < sqrt(Q), solve lgQ rounds of discrete log
+ * else -> find a s.t. s | (Pa - 1) -> ans = A^a */
+using LL = long long;
+LL mul(LL x, LL y, LL mod){ return (__int128) x * y % mod; } 
+LL add(LL x, LL y, LL mod){ return (x + y) % mod; }
+LL pw(LL x, LL y, LL mod){
+	LL ret = 1, piv = x;
+	while(y){
+		if(y & 1) ret = mul(ret, piv, mod);
+		piv = mul(piv, piv, mod);
+		y >>= 1;
+	}
+	return ret % mod;
 }
-// solve equation x^2 mod p = a
-bool solve(int a, int p, int &x, int &y) {
-	if(p == 2) { x = y = 1; return true; }
-	int p2 = p / 2, tmp = mypow(a, p2, p);
-	if (tmp == p - 1) return false;
-	if ((p + 1) % 4 == 0) {
-		x=mypow(a,(p+1)/4,p); y=p-x; return true;
-	} else {
-		int t, h, b, pb; calcH(t, h, p);
-		if (t >= 2) {
-			do {b = rand() % (p - 2) + 2;
-			} while (mypow(b, p / 2, p) != p - 1);
-			pb = mypow(b, h, p);
-		} int s = mypow(a, h / 2, p);
-		for (int step = 2; step <= t; step++) {
-			int ss = (((lint)(s * s) % p) * a) % p;
-			for(int i=0;i<t-step;i++) ss=(lint)ss*ss%p;;
-			if (ss + 1 == p) s = (s * pb) % p;
-	  pb = ((lint)pb * pb) % p;
-		} x = ((lint)s * a) % p; y = p - x;
-	} return true; 
+void gcd(LL a, LL b, LL &x, LL &y, LL &g){
+  if (b == 0) {
+    x = 1, y = 0, g = a;
+    return;
+  }
+  LL tx, ty;
+  gcd(b, a%b, tx, ty, g);
+  x = ty; y = tx - ty * (a / b);
+}
+LL P, A, Q, g; // x^P = A mod Q
+const int X = 1e5;
+LL base, ae[X], aXe[X], iaXe[X];
+unordered_map<LL, LL> ht;
+#define FOR(i, c) for (int i = 0; i < (c); ++i)
+#define REP(i, l, r) for (int i = (l); i <= (r); ++i)
+void build(LL a) { // ord(a) = P < sqrt(Q)
+  base = a;
+  ht.clear();
+  ae[0] = 1; ae[1] = a; aXe[0] = 1; aXe[1] = pw(a, X, Q);
+  iaXe[0] = 1; iaXe[1] = pw(aXe[1], Q-2, Q);
+  REP(i, 2, X-1) {
+    ae[i] = mul(ae[i-1], ae[1], Q);
+    aXe[i] = mul(aXe[i-1], aXe[1], Q);
+    iaXe[i] = mul(iaXe[i-1], iaXe[1], Q);
+  }
+  FOR(i, X) ht[ae[i]] = i;
+}
+
+LL dis_log(LL x) {
+  FOR(i, X) {
+    LL iaXi = iaXe[i];
+    LL rst = mul(x, iaXi, Q);
+    if (ht.count(rst)) return i*X + ht[rst];
+  }
+}
+LL main2() {
+	cin >> P >> A >> Q;
+  LL t = 0, s = Q-1;
+  while (s % P == 0) {
+    ++t;
+    s /= P;
+  }
+  if (A == 0) return 0;
+  if (t == 0) {
+    // a^{P^-1 mod phi(Q)}
+    LL x, y, _;
+    gcd(P, Q-1, x, y, _);
+    if (x < 0) {
+      x = (x % (Q-1) + Q-1) % (Q-1);
+    }
+    LL ans = pw(A, x, Q);
+    if (pw(ans, P, Q) != A) while(1);
+    return ans;
+  }
+  // A is not P-residue
+  if (pw(A, (Q-1) / P, Q) != 1) return -1;
+  for (g = 2; g < Q; ++g) {
+    if (pw(g, (Q-1) / P, Q) != 1)
+      break;
+  }
+  LL alpha = 0;
+  {
+    LL y, _;
+    gcd(P, s, alpha, y, _);
+    if (alpha < 0) alpha = (alpha % (Q-1) + Q-1) % (Q-1);
+  }
+  if (t == 1) {
+    LL ans = pw(A, alpha, Q);
+    return ans;
+  }
+  LL a = pw(g, (Q-1) / P, Q);
+  build(a);
+  LL b = pw(A, add(mul(P%(Q-1), alpha, Q-1), Q-2, Q-1), Q);
+  LL c = pw(g, s, Q);
+  LL h = 1;
+  LL e = (Q-1) / s / P; // r^{t-1}
+  REP(i, 1, t-1) {
+    e /= P;
+    LL d = pw(b, e, Q);
+    LL j = 0;
+    if (d != 1) {
+      j = -dis_log(d);
+      if (j < 0) j = (j % (Q-1) + Q-1) % (Q-1);
+    }
+    b = mul(b, pw(c, mul(P%(Q-1), j, Q-1), Q), Q);
+    h = mul(h, pw(c, j, Q), Q);
+    c = pw(c, P, Q);
+  }
+  return mul(pw(A, alpha, Q), h, Q);
 }
 \end{minted}
-
 \subsection{Miller-Rabin Test + Pollard Rho Factorization}
 \begin{minted}{cpp}
 namespace miller_rabin{
-	lint mul(lint a, lint b, lint p){
-		lint ret = 0;
-		while(a){
-			if(a&1) ret = (ret + b) % p;
-			a >>= 1;
-			b = (b << 1) % p;
-		}
-		return ret;
-	}
+    lint mul(lint x, lint y, lint mod){ return (__int128) x * y % mod; } 
 	lint ipow(lint x, lint y, lint p){
 		lint ret = 1, piv = x % p;
 		while(y){
@@ -2153,8 +2361,6 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
 \section{Miscellaneous}
 \subsection {Popular Optimization Technique}
 \begin{itemize}
-	
-	\item \textcolor{red}{\textbf{NO. THE PROBLEM IS ACTUALLY EASY. YOU JUST READ IT WRONG}}
 	\item Add or remove the constraints / Simplify the problem / Solve simillar problem
 	\item "Colliding ants problem" : Find a better way to describe the situation
 	\item CHT. DnC optimization. Mo's \sout{algorithm} trick (on tree). IOI 2016 Aliens trick. IOI 2009 Regions trick.
