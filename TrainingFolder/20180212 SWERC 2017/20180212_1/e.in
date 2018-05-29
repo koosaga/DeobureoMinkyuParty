@@ -1,8 +1,0 @@
-100
-6
-pt pb t 1 2
-pc pb c 5 10
-pcl pt c 5 5
-pcl pc t 1 2
-psa pcl s 7 6
-psp pt c 3 1 

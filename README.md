@@ -23,14 +23,14 @@
  * 2017.09.23 2nd in Korea National First Round 2017 
  * 2017.11.11 4th in Daejeon Regional 2017 (Univ Ranking 2nd)
  * 2017.12.22 Champion in Nakhon Pathom Regional 2017
- * (Planned) 2018.04.19 ??? in World Finals 2018
+ * 2018.04.19 20th in World Finals 2018
 
 | Date       | Contest                    | AC   | Max  | A     | B     | C     | D     | E     | F     | G     | H     | I     | J     | K     | L     | M    |
 | ---------- | -------------------------- | ---- | ---- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ---- |
 | 2017.09.23 | Korea National First Round | 11   | 12   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** | **I** | .     | **K** | **L** |      |
 | 2017.11.11 | Daejeon Regional           | 11   | 12   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** | **I** | .     | **K** | **L** |      |
 | 2017.12.22 | Nakhon Pathom Regional     | 12   | 12   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **H** | **I** | **J** | **K** | **L** |      |
-|2018.04.19|World Finals|TBD|TBD
+|2018.04.19|World Finals|6|10| **A** | **B** | . | . | . | **F** | . | **H** | **I** | . | **K** |  |      |
 
 ## Contest / Training
 
@@ -81,6 +81,7 @@
 |2018.03.25|Opencup 2017-2018. GP of America |9|10|**A**|**B**|**C**|**D**|**E**|**F**|.|**H**|**I**|.|**K**|||
 |2018.04.02|Ptz Summer-2017. MIPT Contest |11|11|**A**|**B**|**C**|**D**|**E**|**F**|**G**|**H**|**I**|**J**|**K**|||
 |2018.04.04|Opencup 2017-2018. GP of Urals |6|10|**A**|**B**|**C**|.|**E**|**F**|.|.|.|.|**K**|||
+(we did bit more, but i forgot what it was)
 
 ## FAQ
 
