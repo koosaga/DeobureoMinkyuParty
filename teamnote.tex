@@ -102,9 +102,11 @@ bool bfs(int n){
 	return ok;
 }
 bool dfs(int x){
+	if(vis[x]) return 0;
+	vis[x] = 1;
 	for(auto &i : gph[x]){
 		if(r[i] == -1 || (!vis[r[i]] && dis[r[i]] == dis[x] + 1 && dfs(r[i]))){
-			vis[r[i]] = 1; l[x] = i; r[i] = x;
+			l[x] = i; r[i] = x;
 			return 1;
 		}
 	}
