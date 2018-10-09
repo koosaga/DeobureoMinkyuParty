@@ -1,17 +1,17 @@
 % Team Note of Deobureo Minkyu Party.
 % These codes should be guaranteed, fast enough, short and easy to type.
 
-\documentclass[landscape, 8pt, a4paper, oneside,  twocolumn]{extarticle}
+\documentclass[landscape, 8pt, a4paper, oneside, twocolumn]{extarticle}
 
 \setlength{\columnseprule}{0.4pt}
 \pagenumbering{arabic}
 
 \usepackage{kotex}
 
-\usepackage[left=0.8cm,right=0.8cm,top=2cm,bottom=0.3cm,a4paper]{geometry}
+\usepackage[left=0.8cm, right=0.8cm, top=2cm, bottom=0.3cm, a4paper]{geometry}
 \usepackage{amsmath}
 \usepackage{ulem}
-\usepackage{amssymb} 
+\usepackage{amssymb}
 \usepackage{minted}
 \usepackage{color}
 \usepackage{indentfirst}
@@ -25,7 +25,7 @@
 
 \headsep 0.2cm
 
-\setminted{breaklines=true, tabsize = 2, breaksymbolleft=}
+\setminted{breaklines=true, tabsize=2, breaksymbolleft=}
 \usemintedstyle{perldoc}
 
 
@@ -44,20 +44,19 @@
 
 {
 	\Large
-	
+
 	\maketitle
-	
+
 \tableofcontents
 }
 \thispagestyle{fancy}
-s
 \pagebreak
 
 
- \textcolor{red}{\textbf{ALL BELOW HERE ARE USELESS IF YOU READ THE STATEMENT WRONG}}
-	
+\textcolor{red}{\textbf{ALL BELOW HERE ARE USELESS IF YOU READ THE STATEMENT WRONG}}
+
 \section{Quote}
-럭스를 럭스답게 든든한 연습헬팟 더불어민규당 
+럭스를 럭스답게 든든한 연습헬팟 더불어민규당
 
 
 \begin{minted}{cpp}
@@ -123,7 +122,7 @@ int match(int n){
 		for(int i=0; i<n; i++) if(l[i] == -1 && dfs(i)) ret++;
 	}
 	return ret;
-} 
+}
 bool chk[MAXN + MAXM];
 void rdfs(int x, int n){
 	if(chk[x]) return;
@@ -464,7 +463,7 @@ void dfs(int x){
 	vis[x] = 1;
 	for(auto &i : mf.gph[x]) if(i.cap > 0) dfs(i.pos);
 }
-vector<pi> solve(int n){ // i - j cut : i - j minimum edge cost. 0 based. 
+vector<pi> solve(int n){ // i - j cut : i - j minimum edge cost. 0 based.
 	vector<pi> ret(n); // if i > 0, stores pair(parent,cost)
 	for(int i=1; i<n; i++){
 		for(auto &j : edgs){
@@ -490,14 +489,14 @@ const int MAXN = 2020 + 1;
 struct GM { // 1-based Vertex index
 	int vis[MAXN], par[MAXN], orig[MAXN], match[MAXN], aux[MAXN], t, N;
 	vector<int> conn[MAXN];
-	queue<int> Q; 
+	queue<int> Q;
 	void addEdge(int u, int v) {
 		conn[u].push_back(v); conn[v].push_back(u);
 	}
 	void init(int n) {
 		N = n; t = 0;
 		for(int i=0; i<=n; ++i) {
-			conn[i].clear(); 
+			conn[i].clear();
 			match[i] = aux[i] = par[i] = 0;
 		}
 	}
@@ -567,7 +566,7 @@ struct GM { // 1-based Vertex index
 // https://github.com/tzupengwang/PECaveros/blob/master/
 // codebook/graph/BorrowedGeneralWeightedMatching.cpp
 // N^3 (but fast in practice)
-struct WeightGraph { 
+struct WeightGraph {
   static const int INF = INT_MAX;
   static const int N = 514;
   struct edge{
@@ -781,7 +780,7 @@ struct WeightGraph {
 \begin{minted}{cpp}
 strongly_connected scc;
 int n; // = number of clauses
-void init(int _n){ scc.clear(); n = _n; }  
+void init(int _n){ scc.clear(); n = _n; }
 int NOT(int x){ return x >= n ? (x - n) : (x + n); }
 void add_edge(int x, int y){ // input ~x to denote NOT
 	if((x >> 31) & 1) x = (~x) + n;
@@ -790,7 +789,7 @@ void add_edge(int x, int y){ // input ~x to denote NOT
 }
 bool satisfy(vector<bool> &res){
 	res.resize(n);
-	scc.get_scc(2*n);  
+	scc.get_scc(2*n);
 	for(int i=0; i<n; i++){
 		if(scc.comp[i] == scc.comp[NOT(i)]) return 0;
 		if(scc.comp[i] < scc.comp[NOT(i)]) res[i] = 0;
@@ -907,7 +906,7 @@ node *par(node *x){
 	}
 	access(x);
 	return x;
-}	
+}
 node *lca(node *s, node *t){
 	access(s);
 	access(t);
@@ -1016,10 +1015,10 @@ int main(){
 \begin{minted}{cpp}
 namespace dtree{  // by cki86201
 	vector<int> E[MAXN], RE[MAXN], rdom[MAXN];
-	
+
 	int S[MAXN], RS[MAXN], cs;
 	int par[MAXN], val[MAXN], sdom[MAXN], rp[MAXN], dom[MAXN];
-	
+
 	void clear(int n) {
 		cs = 0;
 		for(int i=0;i<=n;i++) {
@@ -1095,7 +1094,7 @@ namespace stoer_wagner{
 		int ans = 1e9;
 		for(int i=0; i<n-1; i++){
 			int s, t;
-			ans = min(ans, minimum_cut_phase(n, s, t, adj, vis)); 
+			ans = min(ans, minimum_cut_phase(n, s, t, adj, vis));
 			vis[t] = 1;
 			for(int j=0; j<n; j++){
 				if(!vis[j]){
@@ -1230,7 +1229,7 @@ bool query(string &s){
 \end{minted}
 
 \subsection{Suffix Array}
-\revised % so slow! 
+\revised % so slow!
 \begin{minted}{cpp}
 const int MAXN = 500005;
 int ord[MAXN], nord[MAXN], cnt[MAXN], aux[MAXN];
@@ -1246,12 +1245,12 @@ void solve(int n, char *str, int *sfx, int *rev, int *lcp){
 		memset(cnt, 0, sizeof(cnt));
 		for(int i=0; i<n; i++) cnt[ord[min(i+p, n)]]++;
 		for(int i=1; i<=n || i<=255; i++) cnt[i] += cnt[i-1];
-		for(int i=n-1; i>=0; i--) 
+		for(int i=n-1; i>=0; i--)
 			aux[--cnt[ord[min(i+p, n)]]] = i;
 		memset(cnt, 0, sizeof(cnt));
 		for(int i=0; i<n; i++) cnt[ord[i]]++;
 		for(int i=1; i<=n || i<=255; i++) cnt[i] += cnt[i-1];
-		for(int i=n-1; i>=0; i--) 
+		for(int i=n-1; i>=0; i--)
 			sfx[--cnt[ord[aux[i]]]] = aux[i];
 		if(pnt == n) break;
 		pnt = 1;
@@ -1282,7 +1281,7 @@ void solve(int n, char *str, int *sfx, int *rev, int *lcp){
 const int MAXN = 1000005;
 int aux[2 * MAXN - 1];
 void solve(int n, int *str, int *ret){
-	// *ret : number of nonobvious palindromic character pair 
+	// *ret : number of nonobvious palindromic character pair
 	for(int i=0; i<n; i++){
 		aux[2*i] = str[i];
 		if(i != n-1) aux[2*i+1] = -1;
@@ -1379,11 +1378,11 @@ namespace eertree{
 \subsection{Circular LCS}
 \begin{minted}{cpp}
 string s1, s2;
- 
+
 int dp[4005][2005];
 int nxt[4005][2005];
 int n, m;
- 
+
 void reroot(int px){
 	int py = 1;
 	while(py <= m && nxt[px][py] != 2) py++;
@@ -1405,17 +1404,17 @@ void reroot(int px){
 		nxt[px][py] = 1;
 	}
 }
- 
+
 int track(int x, int y, int e){ // use this routine to find LCS as string
 	int ret = 0;
 	while(y != 0 && x != e){
 		if(nxt[x][y] == 1) y--;
-		else if(nxt[x][y] == 2) ret += (s1[x] == s2[y]), x--, y--; 
+		else if(nxt[x][y] == 2) ret += (s1[x] == s2[y]), x--, y--;
 		else if(nxt[x][y] == 3) x--;
 	}
 	return ret;
 }
- 
+
 int solve(string a, string b){
 	n = a.size(), m = b.size();
 	s1 = "#" + a + a;
@@ -1473,7 +1472,7 @@ inline double arc_area(double x, double y, double r, double s, double e){ //s an
 	return (r*(x*(sin(e)-sin(s))-y*(cos(e)-cos(s)))+(e-s)*r*r)*0.5;
 }
 
-inline double polygon_area(double x1, double y1, double x2, double y2){ //Shoelace formula 
+inline double polygon_area(double x1, double y1, double x2, double y2){ //Shoelace formula
 	return (x1*y2-x2*y1)*0.5;
 }
 \end{minted}
@@ -1490,7 +1489,7 @@ namespace cover_2d{
 	bool in(const Circle& c, Point p){ return dist(c.p, p) < c.r + eps; }
 	Circle INVAL = Circle{Point(0, 0), -1};
 	Circle mCC(Point a, Point b, Point c){
-		b -= a; c -= a; 
+		b -= a; c -= a;
 		double d = 2*(conj(b)*c).imag(); if(abs(d)<eps) return INVAL;
 		Point ans = (c*norm(b) - b*norm(c)) * Point(0, -1) / d;
 		return Circle{a + ans, abs(ans)};
@@ -1579,7 +1578,7 @@ struct twoset {
 	int size() { return (a != -1) + (b != -1); }
 } E[MAXN][MAXN]; // i < j
 
-struct face{ 
+struct face{
 	vec3 norm;
 	ll disc;
 	int I[3];
@@ -1688,7 +1687,7 @@ namespace hpi{
 			return z(t) ? c * hypot(l.a, l.b) < l.c * hypot(a, b) : t > 0;
 		}
 		pi slope(){ return pi(a, b);}
-	}; 
+	};
 	pi cross(line a, line b){
 		long double det = a.a * b.b - b.a * a.b;
 		return pi((a.c * b.b - a.b * b.c) / det, (a.a * b.c - a.c * b.a) / det);
@@ -1730,7 +1729,7 @@ namespace hpi{
 
 int convex_tangent(vector<pi> &C, pi P, int up = 1){
 	auto sign = [&](lint c){ return c > 0 ? up : c == 0 ? 0 : -up; };
-	auto local = [&](pi P, pi a, pi b, pi c) { 
+	auto local = [&](pi P, pi a, pi b, pi c) {
 		return sign(ccw(P, a, b)) <= 0 && sign(ccw(P, b, c)) >= 0;
 	};
 	int N = C.size()-1, s = 0, e = N, m;
@@ -1794,7 +1793,7 @@ void init(int s, int e, int p){ // Initialize kd-tree
 
 lint dap = 3e18;
 
-void solve(int p, pi x){ // find closest point from point x (L^2) 
+void solve(int p, pi x){ // find closest point from point x (L^2)
 	if(x != tree[p].pnt) dap = min(dap, sqr(x.first - tree[p].pnt.first) + sqr(x.second - tree[p].pnt.second));
 	if(tree[p].spl){
 		if(!cmp2(tree[p].pnt, x)){
@@ -1847,7 +1846,7 @@ namespace fft{
 			roots[i] = (i ? (1ll * roots[i-1] * ang % mod) : 1);
 		}
 		Others are same. If there is /= n, do *= ipow(n, mod - 2).
-		In XOR convolution, roots[*] = 1. 
+		In XOR convolution, roots[*] = 1.
 		*/
 		for(int i=2; i<=n; i<<=1){
 			int step = n / i;
@@ -1924,7 +1923,7 @@ __m256d mult(__m256d a, __m256d b){
 	__m256d db = _mm256_mul_pd(d, b);
 	__m256d e = _mm256_shuffle_pd(db, db, 5);
 	__m256d r = _mm256_addsub_pd(cb, e);
-	return r;    
+	return r;
 }
 void fft(int n, __m128d a[], bool invert){
 	for(int i=1, j=0; i<n; ++i){
@@ -1955,7 +1954,7 @@ void fft(int n, __m128d a[], bool invert){
 	}
 }
 vector<int64_t> multiply(vector<int64_t>& v, vector<int64_t>& w){
-	int n = 2; while(n < v.size()+w.size()) n<<=1; 
+	int n = 2; while(n < v.size()+w.size()) n<<=1;
 	__m128d* fv = new __m128d[n];
 	for(int i=0; i<n; ++i) fv[i][0] = fv[i][1] = 0;
 	for(int i=0; i<v.size(); ++i) fv[i][0] = v[i];
@@ -1969,7 +1968,7 @@ vector<int64_t> multiply(vector<int64_t>& v, vector<int64_t>& w){
 		fv[i] = _mm256_extractf128_pd(a, 0);
 		fv[i+1] = _mm256_extractf128_pd(a, 1);
 	}
-	fft(n, fv, 1); 
+	fft(n, fv, 1);
 	vector<int64_t> ret(n);
 	for(int i=0; i<n; ++i) ret[i] = (int64_t)round(fv[i][1]/2);
 	delete[] fv;
@@ -2004,7 +2003,7 @@ vector<lint> get_inv(int n, const vector<lint> &p){
 vector<lint> poly_divide(const vector<lint> &a, const vector<lint> &b){
 	assert(b.back() != 0); // please trim leading zero
 	int n = a.size(), m = b.size();
-	int k = 2; while(k < n-m+1) k <<= 1; 
+	int k = 2; while(k < n-m+1) k <<= 1;
 	vector<lint> rb(k), ra(k);
 	for(int i=0; i<m && i<k; ++i) rb[i] = b[m-i-1];
 	for(int i=0; i<n && i<k; ++i) ra[i] = a[n-i-1];
@@ -2095,7 +2094,7 @@ struct Simplex{
 // credit : https://github.com/stjepang/snippets/blob/master/count_primes.cpp
 // Primes up to 10^12 can be counted in ~1 second.
 const int MAXN = 1000005; // MAXN is the maximum value of sqrt(N) + 2
-bool prime[MAXN]; 
+bool prime[MAXN];
 int prec[MAXN];
 vector<int> P;
 
@@ -2142,7 +2141,7 @@ master/codebook/math/DiscreteKthsqrt.cpp
  * PP | (Q-1) -> P < sqrt(Q), solve lgQ rounds of discrete log
  * else -> find a s.t. s | (Pa - 1) -> ans = A^a */
 using LL = long long;
-LL mul(LL x, LL y, LL mod){ return (__int128) x * y % mod; } 
+LL mul(LL x, LL y, LL mod){ return (__int128) x * y % mod; }
 LL add(LL x, LL y, LL mod){ return (x + y) % mod; }
 LL pw(LL x, LL y, LL mod){
 	LL ret = 1, piv = x;
@@ -2247,7 +2246,7 @@ LL main2() {
 \subsection{Miller-Rabin Test + Pollard Rho Factorization}
 \begin{minted}{cpp}
 namespace miller_rabin{
-    lint mul(lint x, lint y, lint mod){ return (__int128) x * y % mod; } 
+    lint mul(lint x, lint y, lint mod){ return (__int128) x * y % mod; }
 	lint ipow(lint x, lint y, lint p){
 		lint ret = 1, piv = x % p;
 		while(y){
@@ -2275,7 +2274,7 @@ namespace miller_rabin{
 		if(x <= 40) return 0;
 		return 1;
 	}
-	
+
 }
 
 namespace pollard_rho{
@@ -2340,10 +2339,10 @@ vector<lint> factorize(lint n){
 	16    8086598962041600        41472   8 3 2 2 1 1 1 1 1 1 1
 	17   74801040398884800        64512   6 3 2 2 1 1 1 1 1 1 1 1
 	18  897612484786617600       103680   8 4 2 2 1 1 1 1 1 1 1 1
-	
+
 	< 10^k    prime   # of prime          < 10^k            prime
 	-------------------------------------------------------------
-	1             7            4          10           9999999967  
+	1             7            4          10           9999999967
 	2            97           25          11          99999999977
 	3           997          168          12         999999999989
 	4          9973         1229          13        9999999999971
@@ -2368,7 +2367,7 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
 	\item Add or remove the constraints / Simplify the problem / Solve simillar problem
 	\item "Colliding ants problem" : Find a better way to describe the situation
 	\item CHT. DnC optimization. Mo's \sout{algorithm} trick (on tree). IOI 2016 Aliens trick. IOI 2009 Regions trick.
-	\item Knuth's $O(n^2)$ Optimal BST : minimize $D_{i, j} = Min_{i \leq k < j}(D_{i, k} + D_{k+1, j}) + C_{i, j}$. Quadrangle Inequality : $C_{a, c} + C_{b, d} \leq C_{a, d} + C_{b, c}$, $C_{b, c} \leq C_{a, d}$. Now monotonicity holds. 
+	\item Knuth's $O(n^2)$ Optimal BST : minimize $D_{i, j} = Min_{i \leq k < j}(D_{i, k} + D_{k+1, j}) + C_{i, j}$. Quadrangle Inequality : $C_{a, c} + C_{b, d} \leq C_{a, d} + C_{b, c}$, $C_{b, c} \leq C_{a, d}$. Now monotonicity holds.
 	\item Sqrt batch processing - Save queries in buffer, and update in every sqrt steps (cf : IOI 2011 Elephant. hyea calls it "ainta technique")
 	\item Dynamic insertion in static set (Make $O(lgn)$ copy. Merge like binomial heap.)
 	\item Offline insertion / deletion in insert-only set (Pair insertion-deletion operation, and regard it as range query)
@@ -2385,7 +2384,7 @@ int __builtin_popcount(int x);// number of 1-bits in x
 int __builtin_popcountll(long long x);//number of 1-bits in x
 
 lsb(n): (n & -n); // last bit (smallest)
-floor(log2(n)): 31 - __builtin_clz(n | 1); 
+floor(log2(n)): 31 - __builtin_clz(n | 1);
 floor(log2(n)): 63 - __builtin_clzll(n | 1);
 
 //compute next perm. ex) 00111, 01011, 01101, 01110, 10011, 10101..
@@ -2397,7 +2396,7 @@ long long next_perm(long long v){
 
 \subsection {Fast Integer IO}
 \begin{minted}{cpp}
-static char buf[1 << 19]; // size : any number geq than 1024 
+static char buf[1 << 19]; // size : any number geq than 1024
 static int idx = 0;
 static int bytes = 0;
 static inline int _read() {
@@ -2419,9 +2418,9 @@ static inline int _readInt() {
 \end{minted}
 \subsection {OSRank in g++}
 \begin{minted}{cpp}
-#include <ext/pb_ds/assoc_container.hpp> 
-#include <ext/pb_ds/tree_policy.hpp> 
-using namespace __gnu_pbds; 
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace __gnu_pbds;
 
 typedef
 tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
@@ -2459,7 +2458,7 @@ int main(){
 \end{minted}
 
 \subsection {C++ / Environment Overview}
-\begin{minted}{cpp}	
+\begin{minted}{cpp}
 // vimrc : set nu sc ci si ai sw=4 ts=4 bs=2  mouse=a syntax on
 
 // compile : g++ -o PROB PROB.cpp -std=c++11 -Wall -O2
@@ -2478,7 +2477,7 @@ int randint(int lb, int ub){ return uniform_int_distribution<int>(lb, ub)(rng); 
 
 // comparator overload
 auto cmp = [](seg a, seg b){return a.func() < b.func(); };
-set<seg, decltype(cmp)> s(cmp); 
+set<seg, decltype(cmp)> s(cmp);
 map<seg, int, decltype(cmp)> mp(cmp);
 priority_queue<seg, vector<seg>, decltype(cmp)> pq(cmp); // max heap
 
@@ -2495,6 +2494,3 @@ unordered_map<point, int, hasher> hsh;
 \end{minted}
 
 \end{document}
-
-
-
