@@ -145,9 +145,9 @@ vector<int> getcover(int n, int m){ // solve min. vertex cover
 \subsection {Dinic's Algorithm}
 \begin{minted}{cpp}
 const int MAXN = 505;
-struct edg{int pos, cap, rev;};
+struct edg{ int pos, cap, rev; };
 vector<edg> gph[MAXN];
-void clear(){for(int i=0; i<MAXN; i++) gph[i].clear();}
+void clear(){ for(int i=0; i<MAXN; i++) gph[i].clear(); }
 void add_edge(int s, int e, int x){
 	gph[s].push_back({e, x, (int)gph[e].size()});
 	gph[e].push_back({s, 0, (int)gph[s].size()-1});
@@ -455,8 +455,8 @@ struct cost_circ{
 struct edg{ int s, e, x; };
 vector<edg> edgs;
 maxflow mf;
-void clear(){edgs.clear();}
-void add_edge(int s, int e, int x){edgs.push_back({s, e, x});}
+void clear(){ edgs.clear(); }
+void add_edge(int s, int e, int x){ edgs.push_back({s, e, x}); }
 bool vis[MAXN];
 void dfs(int x){
 	if(vis[x]) return;
@@ -941,7 +941,7 @@ int n, m, q;
 int st[MAXN], ed[MAXN], cost[MAXN], chk[MAXN];
 pi qr[MAXN];
 
-bool cmp(int &a, int &b){ return pi(cost[a], a) < pi(cost[b], b);}
+bool cmp(int &a, int &b){ return pi(cost[a], a) < pi(cost[b], b); }
 
 void contract(int s, int e, vector<int> v, vector<int> &must_mst, vector<int> &maybe_mst){
 	sort(v.begin(), v.end(), cmp);
@@ -1480,7 +1480,7 @@ namespace cover_2d{
 	using Point = complex<double>;
 	struct Circle{ Point p; double r; };
 	double dist(Point p, Point q){ return abs(p-q); }
-	double area2(Point p, Point q){ return (conj(p)*q).imag();}
+	double area2(Point p, Point q){ return (conj(p)*q).imag(); }
 	bool in(const Circle& c, Point p){ return dist(c.p, p) < c.r + eps; }
 	Circle INVAL = Circle{Point(0, 0), -1};
 	Circle mCC(Point a, Point b, Point c){
@@ -1496,7 +1496,7 @@ namespace cover_2d{
 			c = Circle{p[i], 0};
 			for(int j=0; j<=i; ++j) if(!in(c, p[j])){
 				Circle ans{(p[i]+p[j])*0.5, dist(p[i], p[j])*0.5};
-				if(c.r == 0) {c = ans; continue;}
+				if(c.r == 0) { c = ans; continue; }
 				Circle l, r; l = r = INVAL;
 				Point pq = p[j]-p[i];
 				for(int k=0; k<=j; ++k) if(!in(ans, p[k])) {
@@ -1680,7 +1680,7 @@ struct line{
 		long double t = ccw(pi(0, 0), pi(a, b), pi(l.a, l.b));
 		return z(t) ? c * hypot(l.a, l.b) < l.c * hypot(a, b) : t > 0;
 	}
-	pi slope(){ return pi(a, b);}
+	pi slope(){ return pi(a, b); }
 };
 pi cross(line a, line b){
 	long double det = a.a * b.b - b.a * a.b;
@@ -2275,35 +2275,35 @@ namespace pollard_rho{
 	void rec(lint n, vector<lint> &v){
 		if(n == 1) return;
 		if(n % 2 == 0){
-		v.push_back(2);
-		rec(n/2, v);
-		return;
+			v.push_back(2);
+			rec(n/2, v);
+			return;
+		}
+		if(miller_rabin::isprime(n)){
+			v.push_back(n);
+			return;
+		}
+		lint a, b, c;
+		while(1){
+			a = rand() % (n-2) + 2;
+			b = a;
+			c = rand() % 20 + 1;
+			do{
+				a = f(a, n, c);
+				b = f(f(b, n, c), n, c);
+			}while(gcd(abs(a-b), n) == 1);
+			if(a != b) break;
+		}
+		lint x = gcd(abs(a-b), n);
+		rec(x, v);
+		rec(n/x, v);
 	}
-	if(miller_rabin::isprime(n)){
-		v.push_back(n);
-		return;
+	vector<lint> factorize(lint n){
+		vector<lint> ret;
+		rec(n, ret);
+		sort(ret.begin(), ret.end());
+		return ret;
 	}
-	lint a, b, c;
-	while(1){
-		a = rand() % (n-2) + 2;
-		b = a;
-		c = rand() % 20 + 1;
-		do{
-			a = f(a, n, c);
-			b = f(f(b, n, c), n, c);
-		}while(gcd(abs(a-b), n) == 1);
-		if(a != b) break;
-	}
-	lint x = gcd(abs(a-b), n);
-	rec(x, v);
-	rec(n/x, v);
-}
-vector<lint> factorize(lint n){
-	vector<lint> ret;
-	rec(n, ret);
-	sort(ret.begin(), ret.end());
-	return ret;
-}
 };
 \end{minted}
 
@@ -2434,7 +2434,7 @@ cout<<X.order_of_key(400)<<endl; // 5
 \subsection {Nasty Stack Hacks}
 \begin{minted}{cpp}
 //64bit ver.
-int main2(){ return 0;}
+int main2(){ return 0; }
 int main(){
 	size_t  sz = 1<<29;  //512MB
 	void* newstack = malloc(sz);
@@ -2467,7 +2467,7 @@ mt19937 rng(0x14004);
 int randint(int lb, int ub){ return uniform_int_distribution<int>(lb, ub)(rng); }
 
 // comparator overload
-auto cmp = [](seg a, seg b){return a.func() < b.func(); };
+auto cmp = [](seg a, seg b){ return a.func() < b.func(); };
 set<seg, decltype(cmp)> s(cmp);
 map<seg, int, decltype(cmp)> mp(cmp);
 priority_queue<seg, vector<seg>, decltype(cmp)> pq(cmp); // max heap
