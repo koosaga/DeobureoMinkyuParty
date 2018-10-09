@@ -547,7 +547,7 @@ struct GM { // 1-based Vertex index
 	}
 	int Match() {
 		int ans = 0;
-		//find random matching (not necessary, constant improvement)
+		// find random matching (not necessary, constant improvement)
 		vector<int> V(N-1); iota(V.begin(), V.end(), 1);
 		shuffle(V.begin(), V.end(), mt19937(0x94949));
 		for(auto x: V) if(!match[x]){
@@ -563,8 +563,7 @@ struct GM { // 1-based Vertex index
 \end{minted}
 \subsection {Blossom Algorithm for Weighted General Matching}
 \begin{minted}{cpp}
-// https://github.com/tzupengwang/PECaveros/blob/master/
-// codebook/graph/BorrowedGeneralWeightedMatching.cpp
+// https://github.com/tzupengwang/PECaveros/blob/master/codebook/graph/BorrowedGeneralWeightedMatching.cpp
 // N^3 (but fast in practice)
 struct WeightGraph {
   static const int INF = INT_MAX;
@@ -1013,7 +1012,7 @@ int main(){
 
 \subsection {Dominator Tree}
 \begin{minted}{cpp}
-// by cki86201
+// CREDITS: cki86201
 vector<int> E[MAXN], RE[MAXN], rdom[MAXN];
 
 int S[MAXN], RS[MAXN], cs;
@@ -1463,11 +1462,11 @@ Line integral of circle parametrized by $(x, y) = (x_C + r_C \cos \theta, \ y_C 
 Line integral of line parametrized by $(x, y) = t(x_1, y_1) + (1-t)(x_2, y_2)$ is given as follows.: $\dfrac{1}{2} (x_1 y_2 - x_2 y_1)$.
 
 \begin{minted}{cpp}
-inline double arc_area(double x, double y, double r, double s, double e){ //s and e are line integral theta value.
+inline double arc_area(double x, double y, double r, double s, double e){ // s and e are line integral theta value.
 	return (r*(x*(sin(e)-sin(s))-y*(cos(e)-cos(s)))+(e-s)*r*r)*0.5;
 }
 
-inline double polygon_area(double x1, double y1, double x2, double y2){ //Shoelace formula
+inline double polygon_area(double x1, double y1, double x2, double y2){ // Shoelace formula
 	return (x1*y2-x2*y1)*0.5;
 }
 \end{minted}
@@ -1554,7 +1553,7 @@ namespace cover_3d{
 
 \subsection{3D Convex Hull}
 \begin{minted}{cpp}
-// code credit : https://gist.github.com/msg555/4963794
+// CREDITS: https://gist.github.com/msg555/4963794
 struct vec3{
 	ll x, y, z;
 	vec3(): x(0), y(0), z(0) {}
@@ -1625,8 +1624,7 @@ vector<face> get_hull(vector<vec3> &A){
 
 \subsection{Dynamic Convex Hull Trick}
 \begin{minted}{cpp}
-// code credit : https://github.com/niklasb/contest-algos/
-// blob/master/convex_hull/dynamic.cpp
+// CREDITS: https://github.com/niklasb/contest-algos/blob/master/convex_hull/dynamic.cpp
 using line_t = double;
 const line_t is_query = -1e18;
 
@@ -1715,7 +1713,7 @@ bool solve(vector<line> v, vector<pi> &solution){ // ax + by <= c;
 
 \subsection{Point-in-polygon test / Point-to-polygon tangent}
 \begin{minted}{cpp}
-// by zigui
+// CREDITS: zigui
 // C : counter_clockwise(C[0] == C[N]), N >= 3
 // return highest point in C <- P(clockwise) or -1 if strictly in P
 // polygon is strongly convex, C[i] != P
@@ -1950,7 +1948,7 @@ vector<int64_t> multiply(vector<int64_t>& v, vector<int64_t>& w){
 	for(int i=0; i<n; ++i) fv[i][0] = fv[i][1] = 0;
 	for(int i=0; i<v.size(); ++i) fv[i][0] = v[i];
 	for(int i=0; i<w.size(); ++i) fv[i][1] = w[i];
-	fft(n, fv, 0); //(a+bi) is stored in FFT
+	fft(n, fv, 0); // (a+bi) is stored in FFT
 	for(int i=0; i<n; i += 2){
 		__m256d a;
 		a = _mm256_insertf128_pd(a, fv[i], 0);
@@ -2082,7 +2080,7 @@ struct Simplex{
 \subsection{Range Prime Counting}
 
 \begin{minted}{cpp}
-// credit : https://github.com/stjepang/snippets/blob/master/count_primes.cpp
+// CREDITS: https://github.com/stjepang/snippets/blob/master/count_primes.cpp
 // Primes up to 10^12 can be counted in ~1 second.
 const int MAXN = 1000005; // MAXN is the maximum value of sqrt(N) + 2
 bool prime[MAXN];
@@ -2116,7 +2114,7 @@ lint rec(lint N, int K) {
 	return ret;
 }
 
-lint count_primes(lint N) { //less than or equal to
+lint count_primes(lint N) { // less than or equal to
 	if (N < MAXN) return prec[N];
 	int K = prec[(int)sqrt(N) + 1];
 	return N-1 - rec(N, K) + prec[P[K]];
@@ -2124,8 +2122,7 @@ lint count_primes(lint N) { //less than or equal to
 \end{minted}
 \subsection{Discrete Kth root}
 \begin{minted}{cpp}
-/* code source : https://github.com/tzupengwang/PECaveros/blob/
-master/codebook/math/DiscreteKthsqrt.cpp
+/* CREDITS: https://github.com/tzupengwang/PECaveros/blob/master/codebook/math/DiscreteKthsqrt.cpp
  * Solve x for x^P = A mod Q
  * (P, Q-1) = 1 -> P^-1 mod (Q-1) exists
  * x has solution iff A^((Q-1) / P) = 1 mod Q
@@ -2367,18 +2364,18 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
 
 \subsection {Bit Twiddling Hack}
 \begin{minted}{cpp}
-int __builtin_clz(int x);//number of leading zero
-int __builtin_ctz(int x);//number of trailing zero
-int __builtin_clzll(long long x);//number of leading zero
-int __builtin_ctzll(long long x);//number of trailing zero
+int __builtin_clz(int x);// number of leading zero
+int __builtin_ctz(int x);// number of trailing zero
+int __builtin_clzll(long long x);// number of leading zero
+int __builtin_ctzll(long long x);// number of trailing zero
 int __builtin_popcount(int x);// number of 1-bits in x
-int __builtin_popcountll(long long x);//number of 1-bits in x
+int __builtin_popcountll(long long x);// number of 1-bits in x
 
 lsb(n): (n & -n); // last bit (smallest)
 floor(log2(n)): 31 - __builtin_clz(n | 1);
 floor(log2(n)): 63 - __builtin_clzll(n | 1);
 
-//compute next perm. ex) 00111, 01011, 01101, 01110, 10011, 10101..
+// compute next perm. ex) 00111, 01011, 01101, 01110, 10011, 10101..
 long long next_perm(long long v){
 	long long t = v | (v-1);
 	return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(v) + 1));
@@ -2433,10 +2430,10 @@ cout<<X.order_of_key(400)<<endl; // 5
 
 \subsection {Nasty Stack Hacks}
 \begin{minted}{cpp}
-//64bit ver.
+// 64bit ver.
 int main2(){ return 0; }
 int main(){
-	size_t  sz = 1<<29;  //512MB
+	size_t  sz = 1<<29;  // 512MB
 	void* newstack = malloc(sz);
 	void* sp_dest = newstack + sz - sizeof(void*);
 	asm  __volatile__("movq %0, %%rax\n\t"
