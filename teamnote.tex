@@ -1013,100 +1013,97 @@ int main(){
 
 \subsection {Dominator Tree}
 \begin{minted}{cpp}
-namespace dtree{  // by cki86201
-	vector<int> E[MAXN], RE[MAXN], rdom[MAXN];
+// by cki86201
+vector<int> E[MAXN], RE[MAXN], rdom[MAXN];
 
-	int S[MAXN], RS[MAXN], cs;
-	int par[MAXN], val[MAXN], sdom[MAXN], rp[MAXN], dom[MAXN];
+int S[MAXN], RS[MAXN], cs;
+int par[MAXN], val[MAXN], sdom[MAXN], rp[MAXN], dom[MAXN];
 
-	void clear(int n) {
-		cs = 0;
-		for(int i=0;i<=n;i++) {
-			par[i] = val[i] = sdom[i] = rp[i] = dom[i] = S[i] = RS[i] = 0;
-			E[i].clear(); RE[i].clear(); rdom[i].clear();
+void clear(int n) {
+	cs = 0;
+	for(int i=0;i<=n;i++) {
+		par[i] = val[i] = sdom[i] = rp[i] = dom[i] = S[i] = RS[i] = 0;
+		E[i].clear(); RE[i].clear(); rdom[i].clear();
+	}
+}
+void add_edge(int x, int y) { E[x].push_back(y); }
+void Union(int x, int y) { par[x] = y; }
+int Find(int x, int c = 0) {
+	if(par[x] == x) return c ? -1 : x;
+	int p = Find(par[x], 1);
+	if(p == -1) return c ? par[x] : val[x];
+	if(sdom[val[x]] > sdom[val[par[x]]]) val[x] = val[par[x]];
+	par[x] = p;
+	return c ? p : val[x];
+}
+void dfs(int x) {
+	RS[ S[x] = ++cs ] = x;
+	par[cs] = sdom[cs] = val[cs] = cs;
+	for(int e : E[x]) {
+		if(S[e] == 0) dfs(e), rp[S[e]] = S[x];
+		RE[S[e]].push_back(S[x]);
+	}
+}
+int solve(int s, int *up) { // Calculate idoms
+	dfs(s);
+	for(int i=cs;i;i--) {
+		for(int e : RE[i]) sdom[i] = min(sdom[i], sdom[Find(e)]);
+		if(i > 1) rdom[sdom[i]].push_back(i);
+		for(int e : rdom[i]) {
+			int p = Find(e);
+			if(sdom[p] == i) dom[e] = i;
+			else dom[e] = p;
 		}
+		if(i > 1) Union(i, rp[i]);
 	}
-	void add_edge(int x, int y) { E[x].push_back(y); }
-	void Union(int x, int y) { par[x] = y; }
-	int Find(int x, int c = 0) {
-		if(par[x] == x) return c ? -1 : x;
-		int p = Find(par[x], 1);
-		if(p == -1) return c ? par[x] : val[x];
-		if(sdom[val[x]] > sdom[val[par[x]]]) val[x] = val[par[x]];
-		par[x] = p;
-		return c ? p : val[x];
-	}
-	void dfs(int x) {
-		RS[ S[x] = ++cs ] = x;
-		par[cs] = sdom[cs] = val[cs] = cs;
-		for(int e : E[x]) {
-			if(S[e] == 0) dfs(e), rp[S[e]] = S[x];
-			RE[S[e]].push_back(S[x]);
-		}
-	}
-	int solve(int s, int *up) { // Calculate idoms
-		dfs(s);
-		for(int i=cs;i;i--) {
-			for(int e : RE[i]) sdom[i] = min(sdom[i], sdom[Find(e)]);
-			if(i > 1) rdom[sdom[i]].push_back(i);
-			for(int e : rdom[i]) {
-				int p = Find(e);
-				if(sdom[p] == i) dom[e] = i;
-				else dom[e] = p;
-			}
-			if(i > 1) Union(i, rp[i]);
-		}
-		for(int i=2;i<=cs;i++) if(sdom[i] != dom[i]) dom[i] = dom[dom[i]];
-		for(int i=2;i<=cs;i++) up[RS[i]] = RS[dom[i]];
-		return cs;
-	}
+	for(int i=2;i<=cs;i++) if(sdom[i] != dom[i]) dom[i] = dom[dom[i]];
+	for(int i=2;i<=cs;i++) up[RS[i]] = RS[dom[i]];
+	return cs;
 }
 \end{minted}
 
 \subsection {Global Min-Cut}
 \begin{minted}{cpp}
-namespace stoer_wagner{
-	int minimum_cut_phase(int n, int &s, int &t, vector<vector<int>> &adj, vector<int> vis){
-		vector<int> dist(n);
-		int mincut = 1e9;
-		while(true){
-			int pos = -1, cur = -1e9;
-			for(int i=0; i<n; i++){
-				if(!vis[i] && dist[i] > cur){
-					cur = dist[i];
-					pos = i;
-				}
-			}
-			if(pos == -1) break;
-			s = t;
-			t = pos;
-			mincut = cur;
-			vis[pos] = 1;
-			for(int i=0; i<n; i++){
-				if(!vis[i]) dist[i] += adj[pos][i];
+int minimum_cut_phase(int n, int &s, int &t, vector<vector<int>> &adj, vector<int> vis){
+	vector<int> dist(n);
+	int mincut = 1e9;
+	while(true){
+		int pos = -1, cur = -1e9;
+		for(int i=0; i<n; i++){
+			if(!vis[i] && dist[i] > cur){
+				cur = dist[i];
+				pos = i;
 			}
 		}
-		return mincut; // optimal s-t cut here is, {t} and V \ {t}
-	}
-	int solve(int n, vector<vector<int>> adj){
-		if(n <= 1) return 0;
-		vector<int> vis(n);
-		int ans = 1e9;
-		for(int i=0; i<n-1; i++){
-			int s, t;
-			ans = min(ans, minimum_cut_phase(n, s, t, adj, vis));
-			vis[t] = 1;
-			for(int j=0; j<n; j++){
-				if(!vis[j]){
-					adj[s][j] += adj[t][j];
-					adj[j][s] += adj[j][t];
-				}
-			}
-			adj[s][s] = 0;
+		if(pos == -1) break;
+		s = t;
+		t = pos;
+		mincut = cur;
+		vis[pos] = 1;
+		for(int i=0; i<n; i++){
+			if(!vis[i]) dist[i] += adj[pos][i];
 		}
-		return ans;
 	}
-};
+	return mincut; // optimal s-t cut here is, {t} and V \ {t}
+}
+int solve(int n, vector<vector<int>> adj){
+	if(n <= 1) return 0;
+	vector<int> vis(n);
+	int ans = 1e9;
+	for(int i=0; i<n-1; i++){
+		int s, t;
+		ans = min(ans, minimum_cut_phase(n, s, t, adj, vis));
+		vis[t] = 1;
+		for(int j=0; j<n; j++){
+			if(!vis[j]){
+				adj[s][j] += adj[t][j];
+				adj[j][s] += adj[j][t];
+			}
+		}
+		adj[s][s] = 0;
+	}
+	return ans;
+}
 \end{minted}
 
 \subsection {Edmond's Directed MST}
@@ -1304,76 +1301,74 @@ void solve(int n, int *str, int *ret){
 
 \subsection{eertree}
 \begin{minted}{cpp}
-namespace eertree{
-	int nxt[MAXN][26];
-	int par[MAXN], len[MAXN], slink[MAXN], ptr[MAXN], diff[MAXN], series[MAXN], piv;
-	void clear(int n = MAXN){
-		memset(par, 0, sizeof(int) * n);
-		memset(len, 0, sizeof(int) * n);
-		memset(slink, 0, sizeof(int) * n);
-		memset(nxt, 0, sizeof(int) * 26 * n);
-		piv = 0;
-	}
-	void init(int n, char *a){
-		par[0] = 0;
-		par[1] = 1;
-		a[0] = -1;
-		len[0] = -1;
-		piv = 1;
-		int cur = 1;
-		for(int i=1; i<=n; i++){
-			while(a[i] != a[i - len[cur] - 1]) cur = slink[cur];
-			if(!nxt[cur][a[i]]){
-				nxt[cur][a[i]] = ++piv;
-				par[piv] = cur;
-				len[piv] = len[cur] + 2;
-				int lnk = slink[cur];
-				while(a[i] != a[i - len[lnk] - 1]){
-					lnk = slink[lnk];
-				}
-				if(nxt[lnk][a[i]]) lnk = nxt[lnk][a[i]];
-				if(len[piv] == 1 || lnk == 0) lnk = 1;
-				slink[piv] = lnk;
-				diff[piv] = len[piv] - len[lnk];
-				if(diff[piv] == diff[lnk]) series[piv] = series[lnk];
-				else series[piv] = piv;
+int nxt[MAXN][26];
+int par[MAXN], len[MAXN], slink[MAXN], ptr[MAXN], diff[MAXN], series[MAXN], piv;
+void clear(int n = MAXN){
+	memset(par, 0, sizeof(int) * n);
+	memset(len, 0, sizeof(int) * n);
+	memset(slink, 0, sizeof(int) * n);
+	memset(nxt, 0, sizeof(int) * 26 * n);
+	piv = 0;
+}
+void init(int n, char *a){
+	par[0] = 0;
+	par[1] = 1;
+	a[0] = -1;
+	len[0] = -1;
+	piv = 1;
+	int cur = 1;
+	for(int i=1; i<=n; i++){
+		while(a[i] != a[i - len[cur] - 1]) cur = slink[cur];
+		if(!nxt[cur][a[i]]){
+			nxt[cur][a[i]] = ++piv;
+			par[piv] = cur;
+			len[piv] = len[cur] + 2;
+			int lnk = slink[cur];
+			while(a[i] != a[i - len[lnk] - 1]){
+				lnk = slink[lnk];
 			}
-			cur = nxt[cur][a[i]];
-			ptr[i] = cur;
+			if(nxt[lnk][a[i]]) lnk = nxt[lnk][a[i]];
+			if(len[piv] == 1 || lnk == 0) lnk = 1;
+			slink[piv] = lnk;
+			diff[piv] = len[piv] - len[lnk];
+			if(diff[piv] == diff[lnk]) series[piv] = series[lnk];
+			else series[piv] = piv;
 		}
+		cur = nxt[cur][a[i]];
+		ptr[i] = cur;
 	}
-	int query(int s, int e){
-		int pos = ptr[e];
-		while(len[pos] >= e - s + 1){
-            if(len[pos] % diff[pos] == (e - s + 1) % diff[pos] &&
-               len[series[pos]] <= e - s + 1) return true;
-            pos = series[pos];
-            pos = slink[pos];
-		}
-		return false;
+}
+int query(int s, int e){
+	int pos = ptr[e];
+	while(len[pos] >= e - s + 1){
+        if(len[pos] % diff[pos] == (e - s + 1) % diff[pos] &&
+           len[series[pos]] <= e - s + 1) return true;
+        pos = series[pos];
+        pos = slink[pos];
 	}
-	vector<pi> minimum_partition(int n){ // (odd min, even min)
-		vector<pi> dp(n + 1);
-		vector<pi> series_ans(n + 10);
-		dp[0] = pi(1e9 + 1, 0);
-		for(int i=1; i<=n; i++){
-			dp[i] = pi(1e9 + 1, 1e9);
-			for(int j=ptr[i]; len[j] > 0;){
-				int slv = slink[series[j]];
-				series_ans[j] = dp[i - (len[slv] + diff[j])];
-				if(diff[j] == diff[slink[j]]){
-					series_ans[j].first = min(series_ans[j].first, series_ans[slink[j]].first);
-					series_ans[j].second = min(series_ans[j].second, series_ans[slink[j]].second);
-				}
-				auto val = series_ans[j];
-				dp[i].first = min(dp[i].first, val.second + 1);
-				dp[i].second = min(dp[i].second, val.first + 1);
-				j = slv;
+	return false;
+}
+vector<pi> minimum_partition(int n){ // (odd min, even min)
+	vector<pi> dp(n + 1);
+	vector<pi> series_ans(n + 10);
+	dp[0] = pi(1e9 + 1, 0);
+	for(int i=1; i<=n; i++){
+		dp[i] = pi(1e9 + 1, 1e9);
+		for(int j=ptr[i]; len[j] > 0;){
+			int slv = slink[series[j]];
+			series_ans[j] = dp[i - (len[slv] + diff[j])];
+			if(diff[j] == diff[slink[j]]){
+				series_ans[j].first = min(series_ans[j].first, series_ans[slink[j]].first);
+				series_ans[j].second = min(series_ans[j].second, series_ans[slink[j]].second);
 			}
+			auto val = series_ans[j];
+			dp[i].first = min(dp[i].first, val.second + 1);
+			dp[i].second = min(dp[i].second, val.first + 1);
+			j = slv;
 		}
-		return dp;
 	}
-};
+	return dp;
+}
 \end{minted}
 \subsection{Circular LCS}
 \begin{minted}{cpp}
@@ -1675,49 +1670,47 @@ struct HullDynamic : public multiset<Line> { // will maintain upper hull for max
 \begin{minted}{cpp}
 const double eps = 1e-8;
 typedef pair<long double, long double> pi;
-namespace hpi{
-	bool z(long double x){ return fabs(x) < eps; }
-	struct line{
-		long double a, b, c;
-		bool operator<(const line &l)const{
-			bool flag1 = pi(a, b) > pi(0, 0);
-			bool flag2 = pi(l.a, l.b) > pi(0, 0);
-			if(flag1 != flag2) return flag1 > flag2;
-			long double t = ccw(pi(0, 0), pi(a, b), pi(l.a, l.b));
-			return z(t) ? c * hypot(l.a, l.b) < l.c * hypot(a, b) : t > 0;
-		}
-		pi slope(){ return pi(a, b);}
-	};
-	pi cross(line a, line b){
-		long double det = a.a * b.b - b.a * a.b;
-		return pi((a.c * b.b - a.b * b.c) / det, (a.a * b.c - a.c * b.a) / det);
+bool z(long double x){ return fabs(x) < eps; }
+struct line{
+	long double a, b, c;
+	bool operator<(const line &l)const{
+		bool flag1 = pi(a, b) > pi(0, 0);
+		bool flag2 = pi(l.a, l.b) > pi(0, 0);
+		if(flag1 != flag2) return flag1 > flag2;
+		long double t = ccw(pi(0, 0), pi(a, b), pi(l.a, l.b));
+		return z(t) ? c * hypot(l.a, l.b) < l.c * hypot(a, b) : t > 0;
 	}
-	bool bad(line a, line b, line c){
-		if(ccw(pi(0, 0), a.slope(), b.slope()) <= 0) return false;
-		pi crs = cross(a, b);
-		return crs.first * c.a + crs.second * c.b >= c.c;
-	}
-	bool solve(vector<line> v, vector<pi> &solution){ // ax + by <= c;
-		sort(v.begin(), v.end());
-		deque<line> dq;
-		for(auto &i : v){
-			if(!dq.empty() && z(ccw(pi(0, 0), dq.back().slope(), i.slope()))) continue;
-			while(dq.size() >= 2 && bad(dq[dq.size()-2], dq.back(), i)) dq.pop_back();
-			while(dq.size() >= 2 && bad(i, dq[0], dq[1])) dq.pop_front();
-			dq.push_back(i);
-		}
-		while(dq.size() > 2 && bad(dq[dq.size()-2], dq.back(), dq[0])) dq.pop_back();
-		while(dq.size() > 2 && bad(dq.back(), dq[0], dq[1])) dq.pop_front();
-		vector<pi> tmp;
-		for(int i=0; i<dq.size(); i++){
-			line cur = dq[i], nxt = dq[(i+1)%dq.size()];
-			if(ccw(pi(0, 0), cur.slope(), nxt.slope()) <= eps) return false;
-			tmp.push_back(cross(cur, nxt));
-		}
-		solution = tmp;
-		return true;
-	}
+	pi slope(){ return pi(a, b);}
 };
+pi cross(line a, line b){
+	long double det = a.a * b.b - b.a * a.b;
+	return pi((a.c * b.b - a.b * b.c) / det, (a.a * b.c - a.c * b.a) / det);
+}
+bool bad(line a, line b, line c){
+	if(ccw(pi(0, 0), a.slope(), b.slope()) <= 0) return false;
+	pi crs = cross(a, b);
+	return crs.first * c.a + crs.second * c.b >= c.c;
+}
+bool solve(vector<line> v, vector<pi> &solution){ // ax + by <= c;
+	sort(v.begin(), v.end());
+	deque<line> dq;
+	for(auto &i : v){
+		if(!dq.empty() && z(ccw(pi(0, 0), dq.back().slope(), i.slope()))) continue;
+		while(dq.size() >= 2 && bad(dq[dq.size()-2], dq.back(), i)) dq.pop_back();
+		while(dq.size() >= 2 && bad(i, dq[0], dq[1])) dq.pop_front();
+		dq.push_back(i);
+	}
+	while(dq.size() > 2 && bad(dq[dq.size()-2], dq.back(), dq[0])) dq.pop_back();
+	while(dq.size() > 2 && bad(dq.back(), dq[0], dq[1])) dq.pop_front();
+	vector<pi> tmp;
+	for(int i=0; i<dq.size(); i++){
+		line cur = dq[i], nxt = dq[(i+1)%dq.size()];
+		if(ccw(pi(0, 0), cur.slope(), nxt.slope()) <= eps) return false;
+		tmp.push_back(cross(cur, nxt));
+	}
+	solution = tmp;
+	return true;
+}
 \end{minted}
 
 \subsection{Point-in-polygon test / Point-to-polygon tangent}
@@ -1821,92 +1814,90 @@ void solve(int p, pi x){ // find closest point from point x (L^2)
 \section{Math}
 \subsection{FFT / NTT}
 \begin{minted}{cpp}
-namespace fft{
-	typedef complex<double> base;
-	void fft(vector<base> &a, bool inv){
-		int n = a.size(), j = 0;
-		vector<base> roots(n/2);
-		for(int i=1; i<n; i++){
-			int bit = (n >> 1);
-			while(j >= bit){
-				j -= bit;
-				bit >>= 1;
-			}
-			j += bit;
-			if(i < j) swap(a[i], a[j]);
+typedef complex<double> base;
+void fft(vector<base> &a, bool inv){
+	int n = a.size(), j = 0;
+	vector<base> roots(n/2);
+	for(int i=1; i<n; i++){
+		int bit = (n >> 1);
+		while(j >= bit){
+			j -= bit;
+			bit >>= 1;
 		}
-		double ang = 2 * acos(-1) / n * (inv ? -1 : 1);
-		for(int i=0; i<n/2; i++){
-			roots[i] = base(cos(ang * i), sin(ang * i));
-		}
-		/* In NTT, let prr = primitive root. Then,
-		int ang = ipow(prr, (mod - 1) / n);
-		if(inv) ang = ipow(ang, mod - 2);
-		for(int i=0; i<n/2; i++){
-			roots[i] = (i ? (1ll * roots[i-1] * ang % mod) : 1);
-		}
-		Others are same. If there is /= n, do *= ipow(n, mod - 2).
-		In XOR convolution, roots[*] = 1.
-		*/
-		for(int i=2; i<=n; i<<=1){
-			int step = n / i;
-			for(int j=0; j<n; j+=i){
-				for(int k=0; k<i/2; k++){
-					base u = a[j+k], v = a[j+k+i/2] * roots[step * k];
-					a[j+k] = u+v;
-					a[j+k+i/2] = u-v;
-				}
-			}
-		}
-		if(inv) for(int i=0; i<n; i++) a[i] /= n;
+		j += bit;
+		if(i < j) swap(a[i], a[j]);
 	}
+	double ang = 2 * acos(-1) / n * (inv ? -1 : 1);
+	for(int i=0; i<n/2; i++){
+		roots[i] = base(cos(ang * i), sin(ang * i));
+	}
+	/* In NTT, let prr = primitive root. Then,
+	int ang = ipow(prr, (mod - 1) / n);
+	if(inv) ang = ipow(ang, mod - 2);
+	for(int i=0; i<n/2; i++){
+		roots[i] = (i ? (1ll * roots[i-1] * ang % mod) : 1);
+	}
+	Others are same. If there is /= n, do *= ipow(n, mod - 2).
+	In XOR convolution, roots[*] = 1.
+	*/
+	for(int i=2; i<=n; i<<=1){
+		int step = n / i;
+		for(int j=0; j<n; j+=i){
+			for(int k=0; k<i/2; k++){
+				base u = a[j+k], v = a[j+k+i/2] * roots[step * k];
+				a[j+k] = u+v;
+				a[j+k+i/2] = u-v;
+			}
+		}
+	}
+	if(inv) for(int i=0; i<n; i++) a[i] /= n;
+}
 
-	vector<lint> multiply(vector<lint> &v, vector<lint> &w){
-		vector<base> fv(v.begin(), v.end()), fw(w.begin(), w.end());
-		int n = 2; while(n < v.size() + w.size()) n <<= 1;
-		fv.resize(n); fw.resize(n);
-		fft(fv, 0); fft(fw, 0);
-		for(int i=0; i<n; i++) fv[i] *= fw[i];
-		fft(fv, 1);
-		vector<lint> ret(n);
-		for(int i=0; i<n; i++) ret[i] = (lint)round(fv[i].real());
-		return ret;
+vector<lint> multiply(vector<lint> &v, vector<lint> &w){
+	vector<base> fv(v.begin(), v.end()), fw(w.begin(), w.end());
+	int n = 2; while(n < v.size() + w.size()) n <<= 1;
+	fv.resize(n); fw.resize(n);
+	fft(fv, 0); fft(fw, 0);
+	for(int i=0; i<n; i++) fv[i] *= fw[i];
+	fft(fv, 1);
+	vector<lint> ret(n);
+	for(int i=0; i<n; i++) ret[i] = (lint)round(fv[i].real());
+	return ret;
+}
+vector<lint> multiply(vector<lint> &v, vector<lint> &w, lint mod){
+	int n = 2; while(n < v.size() + w.size()) n <<= 1;
+	vector<base> v1(n), v2(n), r1(n), r2(n);
+	for(int i=0; i<v.size(); i++){
+		v1[i] = base(v[i] >> 15, v[i] & 32767);
 	}
-	vector<lint> multiply(vector<lint> &v, vector<lint> &w, lint mod){
-		int n = 2; while(n < v.size() + w.size()) n <<= 1;
-		vector<base> v1(n), v2(n), r1(n), r2(n);
-		for(int i=0; i<v.size(); i++){
-			v1[i] = base(v[i] >> 15, v[i] & 32767);
-		}
-		for(int i=0; i<w.size(); i++){
-			v2[i] = base(w[i] >> 15, w[i] & 32767);
-		}
-		fft(v1, 0);
-		fft(v2, 0);
-		for(int i=0; i<n; i++){
-			int j = (i ? (n - i) : i);
-			base ans1 = (v1[i] + conj(v1[j])) * base(0.5, 0);
-			base ans2 = (v1[i] - conj(v1[j])) * base(0, -0.5);
-			base ans3 = (v2[i] + conj(v2[j])) * base(0.5, 0);
-			base ans4 = (v2[i] - conj(v2[j])) * base(0, -0.5);
-			r1[i] = (ans1 * ans3) + (ans1 * ans4) * base(0, 1);
-			r2[i] = (ans2 * ans3) + (ans2 * ans4) * base(0, 1);
-		}
-		fft(r1, 1);
-		fft(r2, 1);
-		vector<lint> ret(n);
-		for(int i=0; i<n; i++){
-			lint av = (lint)round(r1[i].real());
-			lint bv = (lint)round(r1[i].imag()) + (lint)round(r2[i].real());
-			lint cv = (lint)round(r2[i].imag());
-			av %= mod, bv %= mod, cv %= mod;
-			ret[i] = (av << 30) + (bv << 15) + cv;
-			ret[i] %= mod;
-			ret[i] += mod;
-			ret[i] %= mod;
-		}
-		return ret;
+	for(int i=0; i<w.size(); i++){
+		v2[i] = base(w[i] >> 15, w[i] & 32767);
 	}
+	fft(v1, 0);
+	fft(v2, 0);
+	for(int i=0; i<n; i++){
+		int j = (i ? (n - i) : i);
+		base ans1 = (v1[i] + conj(v1[j])) * base(0.5, 0);
+		base ans2 = (v1[i] - conj(v1[j])) * base(0, -0.5);
+		base ans3 = (v2[i] + conj(v2[j])) * base(0.5, 0);
+		base ans4 = (v2[i] - conj(v2[j])) * base(0, -0.5);
+		r1[i] = (ans1 * ans3) + (ans1 * ans4) * base(0, 1);
+		r2[i] = (ans2 * ans3) + (ans2 * ans4) * base(0, 1);
+	}
+	fft(r1, 1);
+	fft(r2, 1);
+	vector<lint> ret(n);
+	for(int i=0; i<n; i++){
+		lint av = (lint)round(r1[i].real());
+		lint bv = (lint)round(r1[i].imag()) + (lint)round(r2[i].real());
+		lint cv = (lint)round(r2[i].imag());
+		av %= mod, bv %= mod, cv %= mod;
+		ret[i] = (av << 30) + (bv << 15) + cv;
+		ret[i] %= mod;
+		ret[i] += mod;
+		ret[i] %= mod;
+	}
+	return ret;
 }
 \end{minted}
 
