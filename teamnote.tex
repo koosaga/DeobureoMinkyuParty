@@ -13,7 +13,7 @@
 \usepackage{ulem}
 \usepackage{amssymb}
 \usepackage{minted}
-\usepackage{color}
+\usepackage{color, hyperref}
 \usepackage{indentfirst}
 
 \usepackage{fancyhdr}
@@ -31,7 +31,7 @@
 
 
 \title{Team Note of Deobureo Minkyu Party}
-\author{koosaga, hyea, alex9801}
+\author{tncks0121, koosaga, alex9801, hyea (alumni)}
 \date{Compiled on \today}
 
 
@@ -54,22 +54,6 @@
 
 
 \textcolor{red}{\textbf{ALL BELOW HERE ARE USELESS IF YOU READ THE STATEMENT WRONG}}
-
-\section{Quote}
-럭스를 럭스답게 든든한 연습헬팟 더불어민규당
-
-
-\begin{minted}{cpp}
-hyea: Prove by solving.
-\end{minted}
-
-\begin{minted}{cpp}
-koosaga: Locality to the rescue!
-\end{minted}
-
-\begin{minted}{cpp}
-alex9801: Isshoman Beenzino
-\end{minted}
 
 \section{Flows, Matching}
 \subsection {Hopcroft-Karp Bipartite Matching}
@@ -563,7 +547,7 @@ struct GM { // 1-based Vertex index
 \end{minted}
 \subsection {Blossom Algorithm for Weighted General Matching}
 \begin{minted}{cpp}
-// https://github.com/tzupengwang/PECaveros/blob/master/codebook/graph/BorrowedGeneralWeightedMatching.cpp
+
 // N^3 (but fast in practice)
 struct WeightGraph {
   static const int INF = INT_MAX;
@@ -775,7 +759,6 @@ struct WeightGraph {
 
 \section{Graph}
 \subsection {2-SAT}
-\revised
 \begin{minted}{cpp}
 strongly_connected scc;
 int n; // = number of clauses
@@ -934,7 +917,6 @@ void cut(node *p){
 \end{minted}
 
 \subsection{Offline Dynamic MST}
-\revised
 \begin{minted}{cpp}
 int n, m, q;
 int st[MAXN], ed[MAXN], cost[MAXN], chk[MAXN];
@@ -1012,7 +994,6 @@ int main(){
 
 \subsection {Dominator Tree}
 \begin{minted}{cpp}
-// CREDITS: cki86201
 vector<int> E[MAXN], RE[MAXN], rdom[MAXN];
 
 int S[MAXN], RS[MAXN], cs;
@@ -1106,6 +1087,7 @@ int solve(int n, vector<vector<int>> adj){
 \end{minted}
 
 \subsection {Edmond's Directed MST}
+\revised
 \begin{minted}{cpp}
 // starts from node 0. assumes there exists at least one dmst.
 // edge is reversed : if there is edge s -> e, INSERT IN gph[e]
@@ -1175,6 +1157,8 @@ void dmst(vector<elist> &g, vector<int>& res) {
 	for (int i = 1; i < n; ++i) res.push_back(to[i]->id);
 }
 \end{minted}
+\subsection {Vizing's Theorem}
+\added
 \section{Strings}
 
 \subsection{Aho-Corasick Algorithm}
@@ -1447,31 +1431,6 @@ int solve(string a, string b){
 \end{minted}
 \section{Geometry}
 
-\subsection{Green's Theorem}
-Let $C$ is positive, smooth, simple curve. $D$ is region bounded by $C$. \\
-
-{
-\large
-$\oint_C (L dx + M dy)  = \iint_D (\frac{\partial M}{\partial x} - \frac{\partial L}{\partial y}) $ \\
-}
-
-To calculate area, $\dfrac{\partial M}{\partial x} - \dfrac{\partial L}{\partial y} = 1$, common selection is $M = \dfrac{1}{2} x, \ \ L = -\dfrac{1}{2} y$. \\
-
-Line integral of circle parametrized by $(x, y) = (x_C + r_C \cos \theta, \ y_C + r_C \sin \theta)$ is given as follows.:  $\dfrac{1}{2}( r_C (x_C (\sin \theta_f - \sin \theta_i) - y_C (\cos \theta_f - \cos \theta_i) ) + (\theta_f - \theta_i) r_C ^ 2)$. \\
-
-Line integral of line parametrized by $(x, y) = t(x_1, y_1) + (1-t)(x_2, y_2)$ is given as follows.: $\dfrac{1}{2} (x_1 y_2 - x_2 y_1)$.
-
-\begin{minted}{cpp}
-inline double arc_area(double x, double y, double r, double s, double e){ // s and e are line integral theta value.
-	return (r*(x*(sin(e)-sin(s))-y*(cos(e)-cos(s)))+(e-s)*r*r)*0.5;
-}
-
-inline double polygon_area(double x1, double y1, double x2, double y2){ // Shoelace formula
-	return (x1*y2-x2*y1)*0.5;
-}
-\end{minted}
-
-
 \subsection{Smallest Enclosing Circle / Sphere}
 \begin{minted}{cpp}
 namespace cover_2d{
@@ -1553,7 +1512,6 @@ namespace cover_3d{
 
 \subsection{3D Convex Hull}
 \begin{minted}{cpp}
-// CREDITS: https://gist.github.com/msg555/4963794
 struct vec3{
 	ll x, y, z;
 	vec3(): x(0), y(0), z(0) {}
@@ -1624,7 +1582,6 @@ vector<face> get_hull(vector<vec3> &A){
 
 \subsection{Dynamic Convex Hull Trick}
 \begin{minted}{cpp}
-// CREDITS: https://github.com/niklasb/contest-algos/blob/master/convex_hull/dynamic.cpp
 using line_t = double;
 const line_t is_query = -1e18;
 
@@ -1713,7 +1670,6 @@ bool solve(vector<line> v, vector<pi> &solution){ // ax + by <= c;
 
 \subsection{Point-in-polygon test / Point-to-polygon tangent}
 \begin{minted}{cpp}
-// CREDITS: zigui
 // C : counter_clockwise(C[0] == C[N]), N >= 3
 // return highest point in C <- P(clockwise) or -1 if strictly in P
 // polygon is strongly convex, C[i] != P
@@ -2004,6 +1960,166 @@ vector<lint> poly_divide(const vector<lint> &a, const vector<lint> &b){
 }
 \end{minted}
 
+\subsection{Berlekamp-Massey, Kitamasa}
+\added
+\begin{minted}{cpp}
+vector<int> berlekamp_massey(vector<int> x){
+	vector<int> ls, cur;
+	int lf, ld;
+	for(int i=0; i<x.size(); i++){
+		lint t = 0;
+		for(int j=0; j<cur.size(); j++){
+			t = (t + 1ll * x[i-j-1] * cur[j]) % mod;
+		}
+		if((t - x[i]) % mod == 0) continue;
+		if(cur.empty()){
+			cur.resize(i+1);
+			lf = i;
+			ld = (t - x[i]) % mod;
+			continue;
+		}
+		lint k = -(x[i] - t) * ipow(ld, mod - 2) % mod;
+		vector<int> c(i-lf-1); 
+		c.push_back(k);
+		for(auto &j : ls) c.push_back(-j * k % mod);
+		if(c.size() < cur.size()) c.resize(cur.size());
+		for(int j=0; j<cur.size(); j++){
+			c[j] = (c[j] + cur[j]) % mod;
+		}
+		if(i-lf+(int)ls.size()>=(int)cur.size()){
+			tie(ls, lf, ld) = make_tuple(cur, i, (t - x[i]) % mod);
+		}
+		cur = c;
+	}
+	for(auto &i : cur) i = (i % mod + mod) % mod;
+	return cur;
+}
+int get_nth(vector<int> rec, vector<int> dp, lint n){
+	int m = rec.size();
+	vector<int> s(m), t(m);
+	s[0] = 1;
+	if(m != 1) t[1] = 1;
+	else t[0] = rec[0];
+	auto mul = [&rec](vector<int> v, vector<int> w){
+		int m = v.size();
+		vector<int> t(2 * m);
+		for(int j=0; j<m; j++){
+			for(int k=0; k<m; k++){
+				t[j+k] += 1ll * v[j] * w[k] % mod;
+				if(t[j+k] >= mod) t[j+k] -= mod;
+			}
+		}
+		for(int j=2*m-1; j>=m; j--){
+			for(int k=1; k<=m; k++){
+				t[j-k] += 1ll * t[j] * rec[k-1] % mod;
+				if(t[j-k] >= mod) t[j-k] -= mod;
+			}
+		}
+		t.resize(m);
+		return t;
+	};
+	while(n){
+		if(n & 1) s = mul(s, t);
+		t = mul(t, t);
+		n >>= 1;
+	}
+	lint ret = 0;
+	for(int i=0; i<m; i++) ret += 1ll * s[i] * dp[i] % mod;
+	return ret % mod;
+}
+int guess_nth_term(vector<int> x, lint n){
+	if(n < x.size()) return x[n];
+	vector<int> v = berlekamp_massey(x);
+	if(v.empty()) return 0;
+	return get_nth(v, x, n);
+}
+struct elem{int x, y, v;}; // A_(x, y) <- v, no duplicate please
+
+lint det(int n, vector<elem> v){
+	if(n == 0) return 1;
+	mt19937 rng(0x14004);
+	auto randint = [&rng](int lb, int ub){ 
+		return uniform_int_distribution<int>(lb, ub)(rng); 
+	};
+	vector<int> c, l, r;
+	for(int i=0; i<n; i++){
+		c.push_back(randint(1, mod - 1));
+		l.push_back(randint(1, mod - 1));
+		r.push_back(randint(1, mod - 1));
+	}
+	vector<int> buf(2*n);
+	for(int i=0; i<2*n; i++){
+		for(int j=0; j<n; j++){
+			buf[i] += 1ll * l[j] * r[j] % mod;
+			if(buf[i] >= mod) buf[i] -= mod;
+		}
+		for(int j=0; j<n; j++) r[j] = 1ll * r[j] * c[j] % mod;
+		vector<int> gob(n);
+		for(auto &j : v){
+			gob[j.x] += 1ll * r[j.y] * j.v % mod;
+			if(gob[j.x] < 0) gob[j.x] += mod;
+			if(gob[j.x] >= mod) gob[j.x] -= mod;
+		}
+		r = gob;
+	}
+	auto ret = berlekamp_massey(buf);
+	if(ret.empty() || ret.back() == 0) return 0;
+	assert(ret.size() == n);
+	if(ret.size() != n) return det(n, v);
+	lint cdet = 1;
+	for(int i=0; i<n; i++) cdet *= c[i], cdet %= mod;
+	if(n % 2 == 0) ret.back() = mod - ret.back();
+	return ret.back() * ipow(cdet, mod - 2) % mod;
+}
+\end{minted}
+
+\subsection{Euclidean Algorithm}
+\added
+
+\subsection{Gaussian Elimination}
+\begin{minted}{cpp}
+int n, inv;
+vector<int> basis[505];
+lint gyesu = 1;
+
+void insert(vector<int> v){
+	for(int i=0; i<n; i++){
+		if(basis[i].size()) inv ^= 1; // inversion num increases
+		if(v[i] && basis[i].empty()){
+			basis[i] = v;
+			return;
+		}
+		if(v[i]){
+			lint minv = ipow(basis[i][i], mod - 2) * v[i] % mod;
+			for(auto &j : basis[i]) j = (j * minv) % mod;
+			gyesu *= minv;
+			gyesu %= mod;
+			for(int j=0; j<basis[i].size(); j++){
+				v[j] += mod - basis[i][j];
+				while(v[j] >= mod) v[j] -= mod;
+			}
+		}
+	}
+	puts("0");
+	exit(0);
+}
+
+// Sample: Calculates Determinant in Z_p Field
+int main(){
+	scanf("%d",&n);
+	for(int i=0; i<n; i++){
+		vector<int> v(n);
+		for(int j=0; j<n; j++) scanf("%d",&v[j]);
+		if(i % 2 == 1) inv ^= 1;
+		insert(v);
+	}
+	if(inv) gyesu = mod - gyesu;
+	gyesu = ipow(gyesu, mod - 2);
+	for(int i=0; i<n; i++) gyesu = gyesu * basis[i][i] % mod;
+	cout << gyesu % mod << endl; 
+}
+\end{minted}
+
 \subsection{Simplex Algorithm}
 \begin{minted}{cpp}
 /* Ax <= b, max c^T x
@@ -2080,7 +2196,6 @@ struct Simplex{
 \subsection{Range Prime Counting}
 
 \begin{minted}{cpp}
-// CREDITS: https://github.com/stjepang/snippets/blob/master/count_primes.cpp
 // Primes up to 10^12 can be counted in ~1 second.
 const int MAXN = 1000005; // MAXN is the maximum value of sqrt(N) + 2
 bool prime[MAXN];
@@ -2122,7 +2237,7 @@ lint count_primes(lint N) { // less than or equal to
 \end{minted}
 \subsection{Discrete Kth root}
 \begin{minted}{cpp}
-/* CREDITS: https://github.com/tzupengwang/PECaveros/blob/master/codebook/math/DiscreteKthsqrt.cpp
+/* 
  * Solve x for x^P = A mod Q
  * (P, Q-1) = 1 -> P^-1 mod (Q-1) exists
  * x has solution iff A^((Q-1) / P) = 1 mod Q
@@ -2350,6 +2465,24 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
 
 
 \section{Miscellaneous}
+\subsection {Mathematics}
+\begin{itemize}
+	\item \textbf{Tutte Matrix}. For a simple undirected graph $G$, Let $M$ be a matrix with entries $A_{i, j} = 0$ if $(i, j) \notin E$ and $A_{i, j} = -A_{j, i} = X$ if $(i, j) \in E$. $X$ could be any random value. If the determinants are non-zero, then a perfect matching exists, while other direction might not hold for very small probability.
+	\item \textbf{Cayley's Formula}. Given a degree sequence $d_1, d_2 \cdots, d_n$ for each labeled vertices, there exists $\frac{(n-2)!}{(d_1 - 1)!(d_2 - 1)! \cdots (d_n - 1)!}$ spanning trees. Summing this for every possible degree sequence gives $n^{n-2}$. 
+	\item \textbf{Kirchhoff's Theorem}. For a multigraph $G$ with no loops, define Laplacian matrix as $L = D - A$. $D$ is a diagonal matrix with $D_{i, i} = deg(i)$, and $A$ is an adjacency matrix. If you remove any row and column of $L$, the determinant gives a number of spanning trees.
+	\item \textbf{Green's Theorem}. Let $C$ is positive, smooth, simple curve. $D$ is region bounded by $C$. \\
+	{
+	\large
+	$\oint_C (L dx + M dy)  = \iint_D (\frac{\partial M}{\partial x} - \frac{\partial L}{\partial y}) $ 
+}\\
+
+To calculate area, $\dfrac{\partial M}{\partial x} - \dfrac{\partial L}{\partial y} = 1$, common selection is $M = \dfrac{1}{2} x, \ \ L = -\dfrac{1}{2} y$. \\
+
+Line integral of circle parametrized by $(x, y) = (x_C + r_C \cos \theta, \ y_C + r_C \sin \theta)$, when $\theta = t \theta_i + (1 - t) \theta_f$, is given as follows.:  $\dfrac{1}{2}( r_C (x_C (\sin \theta_f - \sin \theta_i) - y_C (\cos \theta_f - \cos \theta_i) ) + (\theta_f - \theta_i) r_C ^ 2)$.  \\
+
+Line integral of line parametrized by $(x, y) = t(x_1, y_1) + (1-t)(x_2, y_2)$ is given as follows.: $\dfrac{1}{2} (x_1 y_2 - x_2 y_1)$.
+\end{itemize}
+
 \subsection {Popular Optimization Technique}
 \begin{itemize}
 	\item Add or remove the constraints / Simplify the problem / Solve simillar problem
@@ -2370,7 +2503,7 @@ int __builtin_clzll(long long x);// number of leading zero
 int __builtin_ctzll(long long x);// number of trailing zero
 int __builtin_popcount(int x);// number of 1-bits in x
 int __builtin_popcountll(long long x);// number of 1-bits in x
-
+ㅇ
 lsb(n): (n & -n); // last bit (smallest)
 floor(log2(n)): 31 - __builtin_clz(n | 1);
 floor(log2(n)): 63 - __builtin_clzll(n | 1);
@@ -2459,7 +2592,7 @@ struct StupidGCCCantEvenCompileThisSimpleCode{
 	pair<int, int> array[1000000];
 }; // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68203
 
-// how to use rand (in 2017)
+// how to use rand (in 2018)
 mt19937 rng(0x14004);
 int randint(int lb, int ub){ return uniform_int_distribution<int>(lb, ub)(rng); }
 
@@ -2480,5 +2613,14 @@ size_t operator()(const point &p)const{ return p.x * 2 + p.y * 3; }
 unordered_map<point, int, hasher> hsh;
 
 \end{minted}
-
+\subsection {Code Credits}
+\begin{itemize}
+	\item cki86201, zigui
+	\item \url{https://gist.github.com/msg555/4963794}
+	\item \url{https://github.com/niklasb/contest-algos/blob/master/convex_hull/dynamic.cpp}
+	\item \url{https://github.com/jaehyunp/stanfordacm}
+	\item \url{https://github.com/stjepang/snippets/blob/master/count_primes.cpp}
+	\item \url{ https://github.com/tzupengwang/PECaveros/blob/master/codebook/graph/BorrowedGeneralWeightedMatching.cpp}
+	\item \url{https://github.com/tzupengwang/PECaveros/blob/master/codebook/math/DiscreteKthsqrt.cpp}
+\end{itemize}
 \end{document}
