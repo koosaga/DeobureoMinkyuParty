@@ -1,4 +1,15 @@
 # DeobureoMinkyuParty
+should rewrite
+should rewrite
+should rewrite
+should rewrite
+should rewrite
+should rewrite
+should rewrite
+
+
+
+
 럭스를 럭스답게 든든한 연습헬팟 더불어민규당
 
 ## Team Members
