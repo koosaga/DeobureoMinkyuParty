@@ -3,3 +3,5 @@ _minted-teamnote
 *.log
 *.synctex.gz
 *.toc
+.DS_Store
+teamnote.out
