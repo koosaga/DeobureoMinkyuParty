@@ -2472,15 +2472,17 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
 	\item \textbf{Kirchhoff's Theorem}. For a multigraph $G$ with no loops, define Laplacian matrix as $L = D - A$. $D$ is a diagonal matrix with $D_{i, i} = deg(i)$, and $A$ is an adjacency matrix. If you remove any row and column of $L$, the determinant gives a number of spanning trees.
 	\item \textbf{Green's Theorem}. Let $C$ is positive, smooth, simple curve. $D$ is region bounded by $C$. \\
 	{
-	\large
-	$\oint_C (L dx + M dy)  = \iint_D (\frac{\partial M}{\partial x} - \frac{\partial L}{\partial y}) $ 
-}\\
+		\large
+		$\oint_C (L dx + M dy)  = \iint_D (\frac{\partial M}{\partial x} - \frac{\partial L}{\partial y}) $
+	}\\
 
-To calculate area, $\dfrac{\partial M}{\partial x} - \dfrac{\partial L}{\partial y} = 1$, common selection is $M = \dfrac{1}{2} x, \ \ L = -\dfrac{1}{2} y$. \\
+	To calculate area, $\dfrac{\partial M}{\partial x} - \dfrac{\partial L}{\partial y} = 1$, common selection is $M = \dfrac{1}{2} x, \ \ L = -\dfrac{1}{2} y$. \\
 
-Line integral of circle parametrized by $(x, y) = (x_C + r_C \cos \theta, \ y_C + r_C \sin \theta)$, when $\theta = t \theta_i + (1 - t) \theta_f$, is given as follows.:  $\dfrac{1}{2}( r_C (x_C (\sin \theta_f - \sin \theta_i) - y_C (\cos \theta_f - \cos \theta_i) ) + (\theta_f - \theta_i) r_C ^ 2)$.  \\
+    Line integral of circle parametrized by $(x, y) = (x_C + r_C \cos \theta, \ y_C + r_C \sin \theta)$, when $\theta = t \theta_i + (1 - t) \theta_f$, is given as follows.:  $\dfrac{1}{2}( r_C (x_C (\sin \theta_f - \sin \theta_i) - y_C (\cos \theta_f - \cos \theta_i) ) + (\theta_f - \theta_i) r_C ^ 2)$.  \\
 
-Line integral of line parametrized by $(x, y) = t(x_1, y_1) + (1-t)(x_2, y_2)$ is given as follows.: $\dfrac{1}{2} (x_1 y_2 - x_2 y_1)$.
+    Line integral of line parametrized by $(x, y) = t(x_1, y_1) + (1-t)(x_2, y_2)$ is given as follows.: $\dfrac{1}{2} (x_1 y_2 - x_2 y_1)$.
+    \item \textbf{Pick's Theorem}. $A=i+\frac{b}{2}-1$, where: $P$ is a simple polygon whose vertices are grid points, $A$ is area of $P$, $i$ is \# of grid points in the interior of $P$, and $b$ is \# of grid points on the boundary of $P$. \\
+    If $h$ is \# of holes of $P$ ($h+1$ simple closed curves in total), $A=i+\frac{b}{2}+h-1$.
 \end{itemize}
 
 \subsection {Popular Optimization Technique}
@@ -2503,7 +2505,7 @@ int __builtin_clzll(long long x);// number of leading zero
 int __builtin_ctzll(long long x);// number of trailing zero
 int __builtin_popcount(int x);// number of 1-bits in x
 int __builtin_popcountll(long long x);// number of 1-bits in x
-ㅇ
+
 lsb(n): (n & -n); // last bit (smallest)
 floor(log2(n)): 31 - __builtin_clz(n | 1);
 floor(log2(n)): 63 - __builtin_clzll(n | 1);
