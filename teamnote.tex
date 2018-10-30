@@ -563,7 +563,8 @@ struct GM { // 1-based Vertex index
 \end{minted}
 \subsection {Blossom Algorithm for Weighted General Matching}
 \begin{minted}{cpp}
-// https://github.com/tzupengwang/PECaveros/blob/master/codebook/graph/BorrowedGeneralWeightedMatching.cpp
+// CREDITS: https://github.com/tzupengwang/PECaveros/blob/master/
+            codebook/graph/BorrowedGeneralWeightedMatching.cpp
 // N^3 (but fast in practice)
 struct WeightGraph {
   static const int INF = INT_MAX;
@@ -1457,9 +1458,9 @@ $\oint_C (L dx + M dy)  = \iint_D (\frac{\partial M}{\partial x} - \frac{\partia
 
 To calculate area, $\dfrac{\partial M}{\partial x} - \dfrac{\partial L}{\partial y} = 1$, common selection is $M = \dfrac{1}{2} x, \ \ L = -\dfrac{1}{2} y$. \\
 
-Line integral of circle parametrized by $(x, y) = (x_C + r_C \cos \theta, \ y_C + r_C \sin \theta)$ is given as follows.:  $\dfrac{1}{2}( r_C (x_C (\sin \theta_f - \sin \theta_i) - y_C (\cos \theta_f - \cos \theta_i) ) + (\theta_f - \theta_i) r_C ^ 2)$. \\
+Line integral of circle parameterized by $(x, y) = (x_C + r_C \cos \theta, \ y_C + r_C \sin \theta)$ is given as follows.:  $\dfrac{1}{2}( r_C (x_C (\sin \theta_f - \sin \theta_i) - y_C (\cos \theta_f - \cos \theta_i) ) + (\theta_f - \theta_i) r_C ^ 2)$. \\
 
-Line integral of line parametrized by $(x, y) = t(x_1, y_1) + (1-t)(x_2, y_2)$ is given as follows.: $\dfrac{1}{2} (x_1 y_2 - x_2 y_1)$.
+Line integral of line parameterized by $(x, y) = t(x_1, y_1) + (1-t)(x_2, y_2)$ is given as follows.: $\dfrac{1}{2} (x_1 y_2 - x_2 y_1)$.
 
 \begin{minted}{cpp}
 inline double arc_area(double x, double y, double r, double s, double e){ // s and e are line integral theta value.
@@ -2459,7 +2460,7 @@ struct StupidGCCCantEvenCompileThisSimpleCode{
 	pair<int, int> array[1000000];
 }; // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=68203
 
-// how to use rand (in 2017)
+// how to use rand (in 2018)
 mt19937 rng(0x14004);
 int randint(int lb, int ub){ return uniform_int_distribution<int>(lb, ub)(rng); }
 
