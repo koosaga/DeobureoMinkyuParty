@@ -2429,6 +2429,11 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
     Line integral of line parametrized by $(x, y) = t(x_1, y_1) + (1-t)(x_2, y_2)$ is given as follows.: $\dfrac{1}{2} (x_1 y_2 - x_2 y_1)$.
     \item \textbf{Pick's Theorem}. $A=i+\frac{b}{2}-1$, where: $P$ is a simple polygon whose vertices are grid points, $A$ is area of $P$, $i$ is \# of grid points in the interior of $P$, and $b$ is \# of grid points on the boundary of $P$. \\
     If $h$ is \# of holes of $P$ ($h+1$ simple closed curves in total), $A=i+\frac{b}{2}+h-1$.
+    \item \textbf{Burnside's lemma / Pólya enumeration theorem}. Let $c_m(g)$ denote the number of cycles of length $m$ in $g \in G$ when permuting a finite set $X$. The number of colorings of $X$ into $n$ colors with exactly $r_i$ occurrences of the $i$-th color is the coefficient of $t_1^{r_1}\ldots t_n^{r_n}$ in the following polynomial: \\ $P(t_1,\ldots,t_n)=\frac{1}{\left|G\right|}\sum_{g\in G}\prod_{m\ge 1}(t_1^m+\ldots +t_n^m)^{c_m(g)}$ \\
+
+    Without the occurrence restriction: \\
+    $P(1,\ldots,1)=\frac{1}{\left|G\right|}\sum_{g\in G}n^{c(g)}$ \\
+    where $c(g)$ could also be interpreted as the number of elements in $X$ that are fixed up to $g$.
 \end{itemize}
 
 \subsection {Popular Optimization Technique}
@@ -2554,14 +2559,15 @@ size_t operator()(const point &p)const{ return p.x * 2 + p.y * 3; }
 unordered_map<point, int, hasher> hsh;
 
 \end{minted}
-\subsection {Code Credits}
+\subsection {Credits}
 \begin{itemize}[noitemsep,nolistsep]
 	\item cki86201, zigui
 	\item \url{https://gist.github.com/msg555/4963794}
 	\item \url{https://github.com/niklasb/contest-algos/blob/master/convex_hull/dynamic.cpp}
 	\item \url{https://github.com/jaehyunp/stanfordacm}
 	\item \url{https://github.com/stjepang/snippets/blob/master/count_primes.cpp}
-	\item \url{ https://github.com/tzupengwang/PECaveros/blob/master/codebook/graph/BorrowedGeneralWeightedMatching.cpp}
+	\item \url{https://github.com/tzupengwang/PECaveros/blob/master/codebook/graph/BorrowedGeneralWeightedMatching.cpp}
 	\item \url{https://github.com/tzupengwang/PECaveros/blob/master/codebook/math/DiscreteKthsqrt.cpp}
+	\item \url{http://www-math.mit.edu/~etingof/groups.pdf}
 \end{itemize}
 \end{document}
