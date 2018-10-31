@@ -3,6 +3,12 @@
 
 \documentclass[landscape, 8pt, a4paper, oneside, twocolumn]{extarticle}
 
+\usepackage[compact]{titlesec}
+\titlespacing*{\section}
+{0pt}{0px plus 1px minus 0px}{-2px plus 0px minus 0px}
+\titlespacing*{\subsection}
+{0pt}{0px plus 1px minus 0px}{0px plus 3px minus 3px}
+
 \setlength{\columnseprule}{0.4pt}
 \pagenumbering{arabic}
 
@@ -28,6 +34,8 @@
 
 \setminted{breaklines=true, tabsize=2, breaksymbolleft=}
 \usemintedstyle{perldoc}
+
+\setlength\partopsep{-\topsep -\parskip}
 
 \title{Team Note of Deobureo Minkyu Party}
 \author{tncks0121, koosaga, alex9801, hyea (alumni)}
@@ -2327,7 +2335,6 @@ namespace miller_rabin{
 		if(x <= 40) return 0;
 		return 1;
 	}
-
 }
 
 namespace pollard_rho{
@@ -2433,9 +2440,9 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
 
     Without the occurrence restriction: \\
     $P(1,\ldots,1)=\frac{1}{\left|G\right|}\sum_{g\in G}n^{c(g)}$ \\
-    where $c(g)$ could also be interpreted as the number of elements in $X$ that are fixed up to $g$.
-\end{itemize}
+    where $c(g)$ could also be interpreted as the number of elements in $X$ that are fixed up to $g$. \\
 
+\end{itemize}
 \subsection {Popular Optimization Technique}
 \begin{itemize}
 	\item Add or remove the constraints / Simplify the problem / Solve simillar problem
@@ -2557,7 +2564,6 @@ struct hasher {
 size_t operator()(const point &p)const{ return p.x * 2 + p.y * 3; }
 };
 unordered_map<point, int, hasher> hsh;
-
 \end{minted}
 \subsection {Credits}
 \begin{itemize}[noitemsep,nolistsep]
