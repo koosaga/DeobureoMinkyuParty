@@ -2434,14 +2434,36 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
     Line integral of circle parametrized by $(x, y) = (x_C + r_C \cos \theta, \ y_C + r_C \sin \theta)$, when $\theta = t \theta_i + (1 - t) \theta_f$, is given as follows.:  $\dfrac{1}{2}( r_C (x_C (\sin \theta_f - \sin \theta_i) - y_C (\cos \theta_f - \cos \theta_i) ) + (\theta_f - \theta_i) r_C ^ 2)$.  \\
     
     Line integral of line parametrized by $(x, y) = t(x_1, y_1) + (1-t)(x_2, y_2)$ is given as follows.: $\dfrac{1}{2} (x_1 y_2 - x_2 y_1)$.
-    \item \textbf{Pick's Theorem}. $A=i+\frac{b}{2}-1$, where: $P$ is a simple polygon whose vertices are grid points, $A$ is area of $P$, $i$ is \# of grid points in the interior of $P$, and $b$ is \# of grid points on the boundary of $P$. \\
-    If $h$ is \# of holes of $P$ ($h+1$ simple closed curves in total), $A=i+\frac{b}{2}+h-1$.
-    \item \textbf{Burnside's lemma / Pólya enumeration theorem}. Let $c_m(g)$ denote the number of cycles of length $m$ in $g \in G$ when permuting a finite set $X$. The number of colorings of $X$ into $n$ colors with exactly $r_i$ occurrences of the $i$-th color is the coefficient of $t_1^{r_1}\ldots t_n^{r_n}$ in the following polynomial: \\ $P(t_1,\ldots,t_n)=\frac{1}{\left|G\right|}\sum_{g\in G}\prod_{m\ge 1}(t_1^m+\ldots +t_n^m)^{c_m(g)}$ \\
+    \item \textbf{Burnside's lemma / Pólya enumeration theorem}. let $G$ and $H$ be groups of permutations of finite sets $X$ and $Y$. Let $c_m(g)$ denote the number of cycles of length $m$ in $g \in G$ when permuting $X$. The number of colorings of $X$ into $\left|Y\right|=n$ colors with exactly $r_i$ occurrences of the $i$-th color is the coefficient of $w_1^{r_1}\ldots w_n^{r_n}$ in the following polynomial: \\
+    $P(w_1,\ldots ,w_n)=\frac{1}{\left|H\right|}\sum_{h\in H}\frac{1}{\left|G\right|}\sum_{g\in G}\prod_{m\ge 1}(\sum_{h^m(b)=b}(w_b^m))^{c_m(g)}$ \\
+
+    When $H=\{I\}$ (No color permutation): \\
+    $P(w_1,\ldots ,w_n)=\frac{1}{\left|G\right|}\sum_{g\in G}\prod_{m\ge 1}(w_1^m+\ldots +w_n^m)^{c_m(g)}$ \\
 
     Without the occurrence restriction: \\
     $P(1,\ldots,1)=\frac{1}{\left|G\right|}\sum_{g\in G}n^{c(g)}$ \\
-    where $c(g)$ could also be interpreted as the number of elements in $X$ that are fixed up to $g$. \\
-
+    where $c(g)$ could also be interpreted as the number of elements in $X$ that are fixed up to $g$.
+    \item \textbf{Pick's Theorem}. $A=i+\frac{b}{2}-1$, where: $P$ is a simple polygon whose vertices are grid points, $A$ is area of $P$, $i$ is \# of grid points in the interior of $P$, and $b$ is \# of grid points on the boundary of $P$. \\
+    If $h$ is \# of holes of $P$ ($h+1$ simple closed curves in total), $A=i+\frac{b}{2}+h-1$.
+\begin{minted}{cpp}
+// number of (x, y) : (0 <= x < n && 0 < y < k/d x + b/d)
+ll count_solve(ll n, ll k, ll b, ll d) {
+	if (k == 0) {
+		return (b / d) * n;
+	}
+	if (k >= d || b >= d) {
+		return ((k / d) * (n - 1) + 2 * (b / d)) * n / 2 + count_solve(n, k % d, b % d, d);
+	}
+	return count_solve((k * n + b) / d, d, (k * n + b) % d, k);
+}
+\end{minted}
+    \item \textbf{Xudyh Sieve}.
+    $F(n)=\sum_{d\vert n}f(d)$ \\
+    $S(n)=\sum_{i\leq n}f(i)=\sum_{i\leq n}F(i)-\sum_{d=2}^n S\left(\left\lfloor \frac{n}{d}\right\rfloor\right)$ \\
+    \text{Preprocess $S(1)$ to $S(M)$\hspace{0.5cm}(Set $M=n^{\frac{2}{3}}$ for complexity)} \\
+    $S(n)=\sum f(i) = \sum_{i\leq n}\left[F(i)-\sum_{j|i,j\neq i}f(j)\right]=\sum F(i) - \sum_{i/j=d=2}^n\sum_{dj\leq n}f(j)$ \\
+    $S(n)=\sum if(i) = \sum_{i\leq n}i\left[F(i)-\sum_{j|i,j\neq i}f(j)\right]=\sum iF(i) - \sum_{i/j=d=2}^n\sum_{dj\leq n}djf(j)$ \\
+    $\sum_{d\vert n}\varphi (d)=n\hspace{0.5cm}\sum_{d\vert n}\mu (d)=\text{if } (n > 1) \text{ then } 0 \text{ else } 1\hspace{0.5cm}\sum_{d\vert n}(\mu (\frac{n}{d})\sum_{e\vert d}f(e))=f(n)$ \\
 \end{itemize}
 \subsection {Popular Optimization Technique}
 \begin{itemize}
@@ -2557,17 +2579,17 @@ priority_queue<seg, vector<seg>, decltype(cmp)> pq(cmp); // max heap
 
 // hash func overload
 struct point{
-int x, y;
-bool operator==(const point &p)const{ return x == p.x && y == p.y; }
+    int x, y;
+    bool operator==(const point &p)const{ return x == p.x && y == p.y; }
 };
 struct hasher {
-size_t operator()(const point &p)const{ return p.x * 2 + p.y * 3; }
+    size_t operator()(const point &p)const{ return p.x * 2 + p.y * 3; }
 };
 unordered_map<point, int, hasher> hsh;
 \end{minted}
 \subsection {Credits}
 \begin{itemize}[noitemsep,nolistsep]
-	\item cki86201, zigui
+	\item cki86201, zigui, PavelKunyavskiy
 	\item \url{https://gist.github.com/msg555/4963794}
 	\item \url{https://github.com/niklasb/contest-algos/blob/master/convex_hull/dynamic.cpp}
 	\item \url{https://github.com/jaehyunp/stanfordacm}
