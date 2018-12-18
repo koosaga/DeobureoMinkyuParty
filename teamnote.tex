@@ -1961,7 +1961,7 @@ vector<lint> poly_divide(const vector<lint> &a, const vector<lint> &b){
 	return res;
 }
 \end{minted}
-\subsection{Berlekamp-Massey, Kitamasa}
+\subsection{Black Box Linear Algebra, Kitamasa}
 \added
 \begin{minted}{cpp}
 vector<int> berlekamp_massey(vector<int> x){
@@ -1982,7 +1982,7 @@ vector<int> berlekamp_massey(vector<int> x){
 		lint k = -(x[i] - t) * ipow(ld, mod - 2) % mod;
 		vector<int> c(i-lf-1); 
 		c.push_back(k);
-		for(auto &j : ls) c.push_back(-j * k % mod);
+		for(auto &j : ls) c.push_back(-j * k % mod);5
 		if(c.size() < cur.size()) c.resize(cur.size());
 		for(int j=0; j<cur.size(); j++){
 			c[j] = (c[j] + cur[j]) % mod;
@@ -2073,8 +2073,6 @@ lint det(int n, vector<elem> v){
 	return ret.back() * ipow(cdet, mod - 2) % mod;
 }
 \end{minted}
-\subsection{Euclidean Algorithm}
-\added
 \subsection{Gaussian Elimination}
 \begin{minted}{cpp}
 int n, inv;
@@ -2120,70 +2118,69 @@ int main(){
 \end{minted}
 \subsection{Simplex Algorithm}
 \begin{minted}{cpp}
-/* Ax <= b, max c^T x
- * Usage : Simplex(VVD A, VD b, VD c).solve(VD ans)
- * not feasible : -INF; unbounded : INF
- * accuracy ~ (size of ans) * EPS
- * EPS recommended 1e-9 on double, 1e-12 on long double
- * expected n ~ 100, 10ms. worst case is exponential */
-using real_t = double;
-using VD = vector<real_t>;
-using VVD = vector<VD>;
-const real_t EPS = 1e-9;
-int m, n;
-vector<int> B, N;
-VVD D;
-Simplex(const VVD& A, const VD& b, const VD &c)
-	: m(b.size()), n(c.size()), N(n+1), B(m), D(m+2, VD(n+2)){
-		for(int i=0; i<m; ++i) for(int j=0; j<n; ++j) D[i][j] = A[i][j];
-		for(int i=0; i<m; ++i) B[i] = n+i, D[i][n] = -1, D[i][n+1] = b[i];
-		for(int j=0; j<n; ++j) N[j] = j, D[m][j] = -c[j];
-		N[n] = -1; D[m+1][n] = 1;
+using T = long double;
+const int N = 410, M = 30010;
+const T eps = 1e-7;
+int n, m;
+int Left[M], Down[N];
+// time complexity: exponential. fast $O(MN^2)$ in experiment. dependent on the modeling.
+// Ax <= b, max c^T x. 최댓값: v, 답 추적: sol[i]. 1 based
+T a[M][N], b[M], c[N], v, sol[N];
+bool eq(T a, T b) { return fabs(a - b) < eps;  }
+bool ls(T a, T b) { return a < b && !eq(a, b); }
+void init(int p, int q) {
+	n = p; m = q; v = 0;
+	for(int i = 1; i <= m; i++){
+		for(int j = 1; j <= n; j++) a[i][j]=0;
 	}
-void Pivot(int r, int s) {
-	real_t inv = 1/D[r][s];
-	for(int i=0; i<m+2; ++i){
-		for(int j=0; j<n+2; ++j){
-			if(i != r && j != s) D[i][j] -= D[r][j] * D[i][s] * inv;
-		}
-	}
-	for(int i=0; i<m+2; ++i) if(i != r) D[i][s] *= -inv;
-	for(int j=0; j<n+2; ++j) if(j != s) D[r][j] *= inv;
-	D[r][s] = inv; swap(B[r], N[s]);
+	for(int i = 1; i <= m; i++) b[i]=0;
+	for(int i = 1; i <= n; i++) c[i]=sol[i]=0;
 }
-bool Phase(bool p) {
-	int x = m + p;
-	while(true) {
-		int s = -1;
-		for(int j=0; j<=n; ++j){
-			if(!p && N[j] == -1) continue;
-			if(s == -1 || D[x][j] < D[x][s]) s = j;
-		}
-		if(D[x][s] > -EPS) return true;
-		int r = -1;
-		for(int i=0; i<m; ++i){
-			if(D[i][s] <= EPS) continue;
-			if(r == -1 || D[i][n+1] / D[i][s] < D[r][n+1] / D[r][s]) r = i;
-		}
-		if(r == -1) return false;
-		Pivot(r, s);
+void pivot(int x,int y) {
+	swap(Left[x], Down[y]);
+	T k = a[x][y]; a[x][y] = 1;
+	vector<int> nz;
+	for(int i = 1; i <= n; i++){
+		a[x][i] /= k;
+		if(!eq(a[x][i], 0)) nz.push_back(i);
 	}
+	b[x] /= k;
+
+	for(int i = 1; i <= m; i++){
+		if(i == x || eq(a[i][y], 0)) continue;
+		k = a[i][y]; a[i][y] = 0;
+		b[i] -= k*b[x];
+		for(int j : nz) a[i][j] -= k*a[x][j];
+	}
+	if(eq(c[y], 0)) return;
+	k = c[y]; c[y] = 0;
+	v += k*b[x];
+	for(int i : nz) c[i] -= k*a[x][i];
 }
-real_t solve(VD &x) {
-	int r = 0;
-	for(int i=1; i<m; ++i) if(D[i][n+1] < D[r][n+1]) r=i;
-	if(D[r][n+1] < -EPS) {
-		Pivot(r, n);
-		if(!Phase(1) || D[m+1][n+1] < -EPS) return -1/0.0;
-		for(int i=0; i<m; ++i) if(B[i] == -1) {
-			int s = min_element(D[i].begin(), D[i].end() - 1) - D[i].begin();
-			Pivot(i, s);
-		}
+// 0: found solution, 1: no feasible solution, 2: unbounded
+int solve() {
+	for(int i = 1; i <= n; i++) Down[i] = i;
+	for(int i = 1; i <= m; i++) Left[i] = n+i;
+	while(1) { // Eliminating negative b[i]
+		int x = 0, y = 0;
+		for(int i = 1; i <= m; i++) if (ls(b[i], 0) && (x == 0 || b[i] < b[x])) x = i;
+		if(x == 0) break;
+		for(int i = 1; i <= n; i++) if (ls(a[x][i], 0) && (y == 0 || a[x][i] < a[x][y])) y = i;
+		if(y == 0) return 1;
+		pivot(x, y);
 	}
-	if(!Phase(0)) return 1/0.0;
-	x = VD(n);
-	for(int i=0; i<m; ++i) if(B[i] < n) x[B[i]] = D[i][n+1];
-	return D[m][n+1];
+	while(1) {
+		int x = 0, y = 0;
+		for(int i = 1; i <= n; i++)
+			if (ls(0, c[i]) && (!y || c[i] > c[y])) y = i;
+		if(y == 0) break;
+		for(int i = 1; i <= m; i++)
+			if (ls(0, a[i][y]) && (!x || b[i]/a[i][y] < b[x]/a[x][y])) x = i;
+		if(x == 0) return 2;
+		pivot(x, y);
+	}
+	for(int i = 1; i <= m; i++) if(Left[i] <= n) sol[Left[i]] = b[i];
+	return 0;
 }
 \end{minted}
 \subsection{Range Prime Counting}
@@ -2509,6 +2506,7 @@ ll count_solve(ll n, ll k, ll b, ll d) {
 	\item Dynamic insertion in static set (Make $O(lgn)$ copy. Merge like binomial heap.)
 	\item Offline insertion / deletion in insert-only set (Pair insertion-deletion operation, and regard it as range query)
 	\item Atcoder Median Pyramid : Reduce the input to binary, and solve the easier problem.
+	\item LP Duality. max $c^Tx$ sjt to $Ax \leq b$. Dual problem is min $b^Tx$ sjt to $A^Tx \leq c$. By strong duality, min max value coincides.
 \end{itemize}
 \subsection {Bit Twiddling Hack}
 \begin{minted}{cpp}
