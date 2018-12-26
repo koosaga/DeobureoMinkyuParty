@@ -2498,15 +2498,13 @@ ll count_solve(ll n, ll k, ll b, ll d) {
 \end{itemize}
 \subsection {Popular Optimization Technique}
 \begin{itemize}
-	\item Add or remove the constraints / Simplify the problem / Solve simillar problem
-	\item "Colliding ants problem" : Find a better way to describe the situation
 	\item CHT. DnC optimization. Mo's \sout{algorithm} trick (on tree). IOI 2016 Aliens trick. IOI 2009 Regions trick.
 	\item Knuth's $O(n^2)$ Optimal BST : minimize $D_{i, j} = Min_{i \leq k < j}(D_{i, k} + D_{k+1, j}) + C_{i, j}$. Quadrangle Inequality : $C_{a, c} + C_{b, d} \leq C_{a, d} + C_{b, c}$, $C_{b, c} \leq C_{a, d}$. Now monotonicity holds.
 	\item Sqrt batch processing - Save queries in buffer, and update in every sqrt steps (cf : IOI 2011 Elephant. hyea calls it "ainta technique")
-	\item Dynamic insertion in static set (Make $O(lgn)$ copy. Merge like binomial heap.)
+	\item Dynamic insertion in static set (Make $O(\log n)$ copy. Merge like binomial heap.)
 	\item Offline insertion / deletion in insert-only set (Pair insertion-deletion operation, and regard it as range query)
 	\item Atcoder Median Pyramid : Reduce the input to binary, and solve the easier problem.
-	\item LP Duality. max $c^Tx$ sjt to $Ax \leq b$. Dual problem is min $b^Tx$ sjt to $A^Tx \leq c$. By strong duality, min max value coincides.
+	\item LP Duality. max $c^Tx$ sjt to $Ax \leq b$. Dual problem is min $b^Tx$ sjt to $A^Tx \geq c$. By strong duality, min max value coincides.
 \end{itemize}
 \subsection {Bit Twiddling Hack}
 \begin{minted}{cpp}
