@@ -1,14 +1,65 @@
 # DeobureoMinkyuParty
-should rewrite
-should rewrite
-should rewrite
-should rewrite
-should rewrite
-should rewrite
-should rewrite
+
+ * [Jaehyun Koo (구재현)](http://koosaga.com/)
+   * AtCoder : [koosaga](https://atcoder.jp/user/koosaga)
+   * Baekjoon OJ : [koosaga](https://www.acmicpc.net/user/koosaga)
+   * Codeforces : [ko_osaga](http://codeforces.com/profile/ko_osaga)
+   * Topcoder : [gs14004](https://www.topcoder.com/members/gs14004)
+
+
+ * Suchan Park (박수찬)
+   * AtCoder : [tncks0121](https://atcoder.jp/user/tncks0121)
+   * Baekjoon OJ : [tncks0121](https://www.acmicpc.net/user/tncks0121)
+   * Codeforces : [.o.](http://codeforces.com/profile/.o.)
+   * Topcoder : [tncks0121](https://www.topcoder.com/members/tncks0121)
+
+ * Minkyu Jo (조민규)
+   * AtCoder : [alex9801](https://atcoder.jp/user/alex9801)
+   * Baekjoon OJ : [alex9801](https://www.acmicpc.net/user/alex9801)
+   * Codeforces : [alex9801](http://codeforces.com/profile/alex9801)
+   * Topcoder : [alex9801](https://www.topcoder.com/members/alex9801)
+
+
+## ACM-ICPC
+ * 2018.10.06 5th in Korea National First Round 2018
+ * 2018.11.03 4th in Seoul Regional 2018 (Univ Ranking 3rd)
+ * 2018.11.11 Champion in Jakarta Regional 2018
+ * 2019.04.04 ??? in World Finals 2019
+
+| Date       | Contest                    | AC   | Max  | A     | B     | C     | D     | E     | F     | G     | H     | I     | J     | K     | L     | M    |
+| ---------- | -------------------------- | ---- | ---- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ---- |
+| 2018.10.06 | Korea National First Round | 9    | 10   | **A** | **B** |   .   |   .   | **E** | **F** | **G** | **H** | **I** | .     | **K** | **L** |      |
+| 2018.11.03 | Seoul Regional      | 10   | 11   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | .     |       | **J** | **K** | **L** |      |
+| 2018.11.11 | Jakarta Regional | 11   | 11   | **A** | **B** | **C** | **D** | . | **F** | **G** | **H** | **I** | **J** | **K** | **L** |      |
+| 2019.04.04 | World Finals               | ?    | ?    | . | . | . | . | . | . | . | . | . | . | . | . | .     |
+
+
+## Contest / Training
+All training results are summarized in [koosaga's blog](http://koosaga.com/). 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Past team (2017-2018 Season)
 
 럭스를 럭스답게 든든한 연습헬팟 더불어민규당
 
