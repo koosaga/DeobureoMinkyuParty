@@ -2327,47 +2327,6 @@ int de_bruijn(int k, int n) { // Returns size (k^n)
 	return sz;
 }
 \end{minted}
-\subsection{Range Prime Counting}
-\begin{minted}{cpp}
-// Primes up to 10^12 can be counted in ~1 second.
-const int MAXN = 1000005; // MAXN is the maximum value of sqrt(N) + 2
-bool prime[MAXN];
-int prec[MAXN];
-vector<int> P;
-
-void init() {
-	prime[2] = true;
-	for (int i = 3; i < MAXN; i += 2) prime[i] = true;
-	for (int i = 3; i*i < MAXN; i += 2){
-		if (prime[i]){
-			for (int j = i*i; j < MAXN; j += i+i) prime[j] = false;
-		}
-	}
-	for(int i=1; i<MAXN; i++){
-		if (prime[i]) P.push_back(i);
-		prec[i] = prec[i-1] + prime[i];
-	}
-}
-
-lint rec(lint N, int K) {
-	if (N <= 1 || K < 0) return 0;
-	if (N <= P[K]) return N-1;
-	if (N < MAXN && 1ll * P[K]*P[K] > N) return N-1 - prec[N] + prec[P[K]];
-	const int LIM = 250;
-	static int memo[LIM*LIM][LIM];
-	bool ok = N < LIM*LIM;
-	if (ok && memo[N][K]) return memo[N][K];
-	lint ret = N/P[K] - rec(N/P[K], K-1) + rec(N, K-1);
-	if (ok) memo[N][K] = ret;
-	return ret;
-}
-
-lint count_primes(lint N) { // less than or equal to
-	if (N < MAXN) return prec[N];
-	int K = prec[(int)sqrt(N) + 1];
-	return N-1 - rec(N, K) + prec[P[K]];
-}
-\end{minted}
 \subsection{Discrete Kth root}
 \begin{minted}{cpp}
 /* 
@@ -2650,6 +2609,35 @@ ll count_solve(ll n, ll k, ll b, ll d) {
 	\item Atcoder Median Pyramid : Reduce the input to binary, and solve the easier problem.
 	\item LP Duality. max $c^Tx$ sjt to $Ax \leq b$. Dual problem is min $b^Tx$ sjt to $A^Tx \geq c$. By strong duality, min max value coincides.
 \end{itemize}
+\subsection {Fast LL Division / Modulo}
+\begin{minted}{cpp}
+inline void fasterLLDivMod(unsigned long long x, unsigned y, unsigned &out_d, unsigned &out_m) {
+	unsigned xh = (unsigned)(x >> 32), xl = (unsigned)x, d, m;
+#ifdef __GNUC__
+	asm(
+		"divl %4; \n\t"
+		: "=a" (d), "=d" (m)
+		: "d" (xh), "a" (xl), "r" (y)
+	);
+#else
+	__asm {
+		mov edx, dword ptr[xh];
+		mov eax, dword ptr[xl];
+		div dword ptr[y];
+		mov dword ptr[d], eax;
+		mov dword ptr[m], edx;
+	};
+#endif
+	out_d = d; out_m = m;
+}
+//x < 2^32 * MOD !
+inline unsigned Mod(unsigned long long x){
+	unsigned y = mod;
+	unsigned dummy, r;
+	fasterLLDivMod(x, y, dummy, r);
+	return r;
+}
+\end{minted}
 \subsection {Bit Twiddling Hack}
 \begin{minted}{cpp}
 int __builtin_clz(int x);// number of leading zero
@@ -2767,7 +2755,6 @@ unordered_map<point, int, hasher> hsh;
 	\item \url{https://gist.github.com/msg555/4963794}
 	\item \url{https://github.com/niklasb/contest-algos/blob/master/convex_hull/dynamic.cpp}
 	\item \url{https://github.com/jaehyunp/stanfordacm}
-	\item \url{https://github.com/stjepang/snippets/blob/master/count_primes.cpp}
 	\item \url{https://github.com/tzupengwang/PECaveros/blob/master/codebook/graph/BorrowedGeneralWeightedMatching.cpp}
 	\item \url{https://github.com/tzupengwang/PECaveros/blob/master/codebook/math/DiscreteKthsqrt.cpp}
 	\item \url{http://www-math.mit.edu/~etingof/groups.pdf}
