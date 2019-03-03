@@ -1,0 +1,462 @@
+PHI(1):
+  prime factorzation: 
+  coef 1: 1 
+  coef -1: 0 
+  divisors: 1 
+  >> # of coef: 1, 1
+  + x^1 -1 
+PHI(2):
+  prime factorzation:  * 2^1
+  coef 1: 1 0 
+  coef -1: 
+  divisors: 2 1 
+  >> # of coef: 2, 0
+  + x^1 +1 
+PHI(3):
+  prime factorzation:  * 3^1
+  coef 1: 2 1 0 
+  coef -1: 
+  divisors: 3 1 
+  >> # of coef: 3, 0
+  + x^2 + x^1 +1 
+PHI(4):
+  prime factorzation:  * 2^2
+  coef 1: 2 0 
+  coef -1: 
+  divisors: 4 2 1 
+  >> # of coef: 2, 0
+  + x^2 +1 
+PHI(5):
+  prime factorzation:  * 5^1
+  coef 1: 4 3 2 1 0 
+  coef -1: 
+  divisors: 5 1 
+  >> # of coef: 5, 0
+  + x^4 + x^3 + x^2 + x^1 +1 
+PHI(6):
+  prime factorzation:  * 2^1 * 3^1
+  coef 1: 2 0 
+  coef -1: 1 
+  divisors: 6 3 2 1 
+  >> # of coef: 2, 1
+  + x^2 - x^1 +1 
+PHI(7):
+  prime factorzation:  * 7^1
+  coef 1: 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 7 1 
+  >> # of coef: 7, 0
+  + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(8):
+  prime factorzation:  * 2^3
+  coef 1: 4 0 
+  coef -1: 
+  divisors: 8 4 2 1 
+  >> # of coef: 2, 0
+  + x^4 +1 
+PHI(9):
+  prime factorzation:  * 3^2
+  coef 1: 6 3 0 
+  coef -1: 
+  divisors: 9 3 1 
+  >> # of coef: 3, 0
+  + x^6 + x^3 +1 
+PHI(10):
+  prime factorzation:  * 2^1 * 5^1
+  coef 1: 4 2 0 
+  coef -1: 3 1 
+  divisors: 10 5 2 1 
+  >> # of coef: 3, 2
+  + x^4 - x^3 + x^2 - x^1 +1 
+PHI(11):
+  prime factorzation:  * 11^1
+  coef 1: 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 11 1 
+  >> # of coef: 11, 0
+  + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(12):
+  prime factorzation:  * 2^2 * 3^1
+  coef 1: 4 0 
+  coef -1: 2 
+  divisors: 12 6 4 3 2 1 
+  >> # of coef: 2, 1
+  + x^4 - x^2 +1 
+PHI(13):
+  prime factorzation:  * 13^1
+  coef 1: 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 13 1 
+  >> # of coef: 13, 0
+  + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(14):
+  prime factorzation:  * 2^1 * 7^1
+  coef 1: 6 4 2 0 
+  coef -1: 5 3 1 
+  divisors: 14 7 2 1 
+  >> # of coef: 4, 3
+  + x^6 - x^5 + x^4 - x^3 + x^2 - x^1 +1 
+PHI(15):
+  prime factorzation:  * 3^1 * 5^1
+  coef 1: 8 5 3 0 
+  coef -1: 7 4 1 
+  divisors: 15 5 3 1 
+  >> # of coef: 4, 3
+  + x^8 - x^7 + x^5 - x^4 + x^3 - x^1 +1 
+PHI(16):
+  prime factorzation:  * 2^4
+  coef 1: 8 0 
+  coef -1: 
+  divisors: 16 8 4 2 1 
+  >> # of coef: 2, 0
+  + x^8 +1 
+PHI(17):
+  prime factorzation:  * 17^1
+  coef 1: 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 17 1 
+  >> # of coef: 17, 0
+  + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(18):
+  prime factorzation:  * 2^1 * 3^2
+  coef 1: 6 0 
+  coef -1: 3 
+  divisors: 18 9 6 3 2 1 
+  >> # of coef: 2, 1
+  + x^6 - x^3 +1 
+PHI(19):
+  prime factorzation:  * 19^1
+  coef 1: 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 19 1 
+  >> # of coef: 19, 0
+  + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(20):
+  prime factorzation:  * 2^2 * 5^1
+  coef 1: 8 4 0 
+  coef -1: 6 2 
+  divisors: 20 10 5 4 2 1 
+  >> # of coef: 3, 2
+  + x^8 - x^6 + x^4 - x^2 +1 
+PHI(21):
+  prime factorzation:  * 3^1 * 7^1
+  coef 1: 12 9 6 3 0 
+  coef -1: 11 8 4 1 
+  divisors: 21 7 3 1 
+  >> # of coef: 5, 4
+  + x^12 - x^11 + x^9 - x^8 + x^6 - x^4 + x^3 - x^1 +1 
+PHI(22):
+  prime factorzation:  * 2^1 * 11^1
+  coef 1: 10 8 6 4 2 0 
+  coef -1: 9 7 5 3 1 
+  divisors: 22 11 2 1 
+  >> # of coef: 6, 5
+  + x^10 - x^9 + x^8 - x^7 + x^6 - x^5 + x^4 - x^3 + x^2 - x^1 +1 
+PHI(23):
+  prime factorzation:  * 23^1
+  coef 1: 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 23 1 
+  >> # of coef: 23, 0
+  + x^22 + x^21 + x^20 + x^19 + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(24):
+  prime factorzation:  * 2^3 * 3^1
+  coef 1: 8 0 
+  coef -1: 4 
+  divisors: 24 12 8 6 4 3 2 1 
+  >> # of coef: 2, 1
+  + x^8 - x^4 +1 
+PHI(25):
+  prime factorzation:  * 5^2
+  coef 1: 20 15 10 5 0 
+  coef -1: 
+  divisors: 25 5 1 
+  >> # of coef: 5, 0
+  + x^20 + x^15 + x^10 + x^5 +1 
+PHI(26):
+  prime factorzation:  * 2^1 * 13^1
+  coef 1: 12 10 8 6 4 2 0 
+  coef -1: 11 9 7 5 3 1 
+  divisors: 26 13 2 1 
+  >> # of coef: 7, 6
+  + x^12 - x^11 + x^10 - x^9 + x^8 - x^7 + x^6 - x^5 + x^4 - x^3 + x^2 - x^1 +1 
+PHI(27):
+  prime factorzation:  * 3^3
+  coef 1: 18 9 0 
+  coef -1: 
+  divisors: 27 9 3 1 
+  >> # of coef: 3, 0
+  + x^18 + x^9 +1 
+PHI(28):
+  prime factorzation:  * 2^2 * 7^1
+  coef 1: 12 8 4 0 
+  coef -1: 10 6 2 
+  divisors: 28 14 7 4 2 1 
+  >> # of coef: 4, 3
+  + x^12 - x^10 + x^8 - x^6 + x^4 - x^2 +1 
+PHI(29):
+  prime factorzation:  * 29^1
+  coef 1: 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 29 1 
+  >> # of coef: 29, 0
+  + x^28 + x^27 + x^26 + x^25 + x^24 + x^23 + x^22 + x^21 + x^20 + x^19 + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(30):
+  prime factorzation:  * 2^1 * 3^1 * 5^1
+  coef 1: 8 7 1 0 
+  coef -1: 5 4 3 
+  divisors: 30 15 10 6 5 3 2 1 
+  >> # of coef: 4, 3
+  + x^8 + x^7 - x^5 - x^4 - x^3 + x^1 +1 
+PHI(31):
+  prime factorzation:  * 31^1
+  coef 1: 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 31 1 
+  >> # of coef: 31, 0
+  + x^30 + x^29 + x^28 + x^27 + x^26 + x^25 + x^24 + x^23 + x^22 + x^21 + x^20 + x^19 + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(32):
+  prime factorzation:  * 2^5
+  coef 1: 16 0 
+  coef -1: 
+  divisors: 32 16 8 4 2 1 
+  >> # of coef: 2, 0
+  + x^16 +1 
+PHI(33):
+  prime factorzation:  * 3^1 * 11^1
+  coef 1: 20 17 14 11 9 6 3 0 
+  coef -1: 19 16 13 10 7 4 1 
+  divisors: 33 11 3 1 
+  >> # of coef: 8, 7
+  + x^20 - x^19 + x^17 - x^16 + x^14 - x^13 + x^11 - x^10 + x^9 - x^7 + x^6 - x^4 + x^3 - x^1 +1 
+PHI(34):
+  prime factorzation:  * 2^1 * 17^1
+  coef 1: 16 14 12 10 8 6 4 2 0 
+  coef -1: 15 13 11 9 7 5 3 1 
+  divisors: 34 17 2 1 
+  >> # of coef: 9, 8
+  + x^16 - x^15 + x^14 - x^13 + x^12 - x^11 + x^10 - x^9 + x^8 - x^7 + x^6 - x^5 + x^4 - x^3 + x^2 - x^1 +1 
+PHI(35):
+  prime factorzation:  * 5^1 * 7^1
+  coef 1: 24 19 17 14 12 10 7 5 0 
+  coef -1: 23 18 16 13 11 8 6 1 
+  divisors: 35 7 5 1 
+  >> # of coef: 9, 8
+  + x^24 - x^23 + x^19 - x^18 + x^17 - x^16 + x^14 - x^13 + x^12 - x^11 + x^10 - x^8 + x^7 - x^6 + x^5 - x^1 +1 
+PHI(36):
+  prime factorzation:  * 2^2 * 3^2
+  coef 1: 12 0 
+  coef -1: 6 
+  divisors: 36 18 12 9 6 4 3 2 1 
+  >> # of coef: 2, 1
+  + x^12 - x^6 +1 
+PHI(37):
+  prime factorzation:  * 37^1
+  coef 1: 36 35 34 33 32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 37 1 
+  >> # of coef: 37, 0
+  + x^36 + x^35 + x^34 + x^33 + x^32 + x^31 + x^30 + x^29 + x^28 + x^27 + x^26 + x^25 + x^24 + x^23 + x^22 + x^21 + x^20 + x^19 + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(38):
+  prime factorzation:  * 2^1 * 19^1
+  coef 1: 18 16 14 12 10 8 6 4 2 0 
+  coef -1: 17 15 13 11 9 7 5 3 1 
+  divisors: 38 19 2 1 
+  >> # of coef: 10, 9
+  + x^18 - x^17 + x^16 - x^15 + x^14 - x^13 + x^12 - x^11 + x^10 - x^9 + x^8 - x^7 + x^6 - x^5 + x^4 - x^3 + x^2 - x^1 +1 
+PHI(39):
+  prime factorzation:  * 3^1 * 13^1
+  coef 1: 24 21 18 15 12 9 6 3 0 
+  coef -1: 23 20 17 14 10 7 4 1 
+  divisors: 39 13 3 1 
+  >> # of coef: 9, 8
+  + x^24 - x^23 + x^21 - x^20 + x^18 - x^17 + x^15 - x^14 + x^12 - x^10 + x^9 - x^7 + x^6 - x^4 + x^3 - x^1 +1 
+PHI(40):
+  prime factorzation:  * 2^3 * 5^1
+  coef 1: 16 8 0 
+  coef -1: 12 4 
+  divisors: 40 20 10 8 5 4 2 1 
+  >> # of coef: 3, 2
+  + x^16 - x^12 + x^8 - x^4 +1 
+PHI(41):
+  prime factorzation:  * 41^1
+  coef 1: 40 39 38 37 36 35 34 33 32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 41 1 
+  >> # of coef: 41, 0
+  + x^40 + x^39 + x^38 + x^37 + x^36 + x^35 + x^34 + x^33 + x^32 + x^31 + x^30 + x^29 + x^28 + x^27 + x^26 + x^25 + x^24 + x^23 + x^22 + x^21 + x^20 + x^19 + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(42):
+  prime factorzation:  * 2^1 * 3^1 * 7^1
+  coef 1: 12 11 6 1 0 
+  coef -1: 9 8 4 3 
+  divisors: 42 21 14 7 6 3 2 1 
+  >> # of coef: 5, 4
+  + x^12 + x^11 - x^9 - x^8 + x^6 - x^4 - x^3 + x^1 +1 
+PHI(43):
+  prime factorzation:  * 43^1
+  coef 1: 42 41 40 39 38 37 36 35 34 33 32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 43 1 
+  >> # of coef: 43, 0
+  + x^42 + x^41 + x^40 + x^39 + x^38 + x^37 + x^36 + x^35 + x^34 + x^33 + x^32 + x^31 + x^30 + x^29 + x^28 + x^27 + x^26 + x^25 + x^24 + x^23 + x^22 + x^21 + x^20 + x^19 + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(44):
+  prime factorzation:  * 2^2 * 11^1
+  coef 1: 20 16 12 8 4 0 
+  coef -1: 18 14 10 6 2 
+  divisors: 44 22 11 4 2 1 
+  >> # of coef: 6, 5
+  + x^20 - x^18 + x^16 - x^14 + x^12 - x^10 + x^8 - x^6 + x^4 - x^2 +1 
+PHI(45):
+  prime factorzation:  * 3^2 * 5^1
+  coef 1: 24 15 9 0 
+  coef -1: 21 12 3 
+  divisors: 45 15 9 5 3 1 
+  >> # of coef: 4, 3
+  + x^24 - x^21 + x^15 - x^12 + x^9 - x^3 +1 
+PHI(46):
+  prime factorzation:  * 2^1 * 23^1
+  coef 1: 22 20 18 16 14 12 10 8 6 4 2 0 
+  coef -1: 21 19 17 15 13 11 9 7 5 3 1 
+  divisors: 46 23 2 1 
+  >> # of coef: 12, 11
+  + x^22 - x^21 + x^20 - x^19 + x^18 - x^17 + x^16 - x^15 + x^14 - x^13 + x^12 - x^11 + x^10 - x^9 + x^8 - x^7 + x^6 - x^5 + x^4 - x^3 + x^2 - x^1 +1 
+PHI(47):
+  prime factorzation:  * 47^1
+  coef 1: 46 45 44 43 42 41 40 39 38 37 36 35 34 33 32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 47 1 
+  >> # of coef: 47, 0
+  + x^46 + x^45 + x^44 + x^43 + x^42 + x^41 + x^40 + x^39 + x^38 + x^37 + x^36 + x^35 + x^34 + x^33 + x^32 + x^31 + x^30 + x^29 + x^28 + x^27 + x^26 + x^25 + x^24 + x^23 + x^22 + x^21 + x^20 + x^19 + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(48):
+  prime factorzation:  * 2^4 * 3^1
+  coef 1: 16 0 
+  coef -1: 8 
+  divisors: 48 24 16 12 8 6 4 3 2 1 
+  >> # of coef: 2, 1
+  + x^16 - x^8 +1 
+PHI(49):
+  prime factorzation:  * 7^2
+  coef 1: 42 35 28 21 14 7 0 
+  coef -1: 
+  divisors: 49 7 1 
+  >> # of coef: 7, 0
+  + x^42 + x^35 + x^28 + x^21 + x^14 + x^7 +1 
+PHI(50):
+  prime factorzation:  * 2^1 * 5^2
+  coef 1: 20 10 0 
+  coef -1: 15 5 
+  divisors: 50 25 10 5 2 1 
+  >> # of coef: 3, 2
+  + x^20 - x^15 + x^10 - x^5 +1 
+PHI(51):
+  prime factorzation:  * 3^1 * 17^1
+  coef 1: 32 29 26 23 20 17 15 12 9 6 3 0 
+  coef -1: 31 28 25 22 19 16 13 10 7 4 1 
+  divisors: 51 17 3 1 
+  >> # of coef: 12, 11
+  + x^32 - x^31 + x^29 - x^28 + x^26 - x^25 + x^23 - x^22 + x^20 - x^19 + x^17 - x^16 + x^15 - x^13 + x^12 - x^10 + x^9 - x^7 + x^6 - x^4 + x^3 - x^1 +1 
+PHI(52):
+  prime factorzation:  * 2^2 * 13^1
+  coef 1: 24 20 16 12 8 4 0 
+  coef -1: 22 18 14 10 6 2 
+  divisors: 52 26 13 4 2 1 
+  >> # of coef: 7, 6
+  + x^24 - x^22 + x^20 - x^18 + x^16 - x^14 + x^12 - x^10 + x^8 - x^6 + x^4 - x^2 +1 
+PHI(53):
+  prime factorzation:  * 53^1
+  coef 1: 52 51 50 49 48 47 46 45 44 43 42 41 40 39 38 37 36 35 34 33 32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 53 1 
+  >> # of coef: 53, 0
+  + x^52 + x^51 + x^50 + x^49 + x^48 + x^47 + x^46 + x^45 + x^44 + x^43 + x^42 + x^41 + x^40 + x^39 + x^38 + x^37 + x^36 + x^35 + x^34 + x^33 + x^32 + x^31 + x^30 + x^29 + x^28 + x^27 + x^26 + x^25 + x^24 + x^23 + x^22 + x^21 + x^20 + x^19 + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(54):
+  prime factorzation:  * 2^1 * 3^3
+  coef 1: 18 0 
+  coef -1: 9 
+  divisors: 54 27 18 9 6 3 2 1 
+  >> # of coef: 2, 1
+  + x^18 - x^9 +1 
+PHI(55):
+  prime factorzation:  * 5^1 * 11^1
+  coef 1: 40 35 30 25 20 15 10 5 0 
+  coef -1: 39 34 28 23 17 12 6 1 
+  divisors: 55 11 5 1 
+  >> # of coef: 9, 8
+  + x^40 - x^39 + x^35 - x^34 + x^30 - x^28 + x^25 - x^23 + x^20 - x^17 + x^15 - x^12 + x^10 - x^6 + x^5 - x^1 +1 
+PHI(56):
+  prime factorzation:  * 2^3 * 7^1
+  coef 1: 24 16 8 0 
+  coef -1: 20 12 4 
+  divisors: 56 28 14 8 7 4 2 1 
+  >> # of coef: 4, 3
+  + x^24 - x^20 + x^16 - x^12 + x^8 - x^4 +1 
+PHI(57):
+  prime factorzation:  * 3^1 * 19^1
+  coef 1: 36 33 30 27 24 21 18 15 12 9 6 3 0 
+  coef -1: 35 32 29 26 23 20 16 13 10 7 4 1 
+  divisors: 57 19 3 1 
+  >> # of coef: 13, 12
+  + x^36 - x^35 + x^33 - x^32 + x^30 - x^29 + x^27 - x^26 + x^24 - x^23 + x^21 - x^20 + x^18 - x^16 + x^15 - x^13 + x^12 - x^10 + x^9 - x^7 + x^6 - x^4 + x^3 - x^1 +1 
+PHI(58):
+  prime factorzation:  * 2^1 * 29^1
+  coef 1: 28 26 24 22 20 18 16 14 12 10 8 6 4 2 0 
+  coef -1: 27 25 23 21 19 17 15 13 11 9 7 5 3 1 
+  divisors: 58 29 2 1 
+  >> # of coef: 15, 14
+  + x^28 - x^27 + x^26 - x^25 + x^24 - x^23 + x^22 - x^21 + x^20 - x^19 + x^18 - x^17 + x^16 - x^15 + x^14 - x^13 + x^12 - x^11 + x^10 - x^9 + x^8 - x^7 + x^6 - x^5 + x^4 - x^3 + x^2 - x^1 +1 
+PHI(59):
+  prime factorzation:  * 59^1
+  coef 1: 58 57 56 55 54 53 52 51 50 49 48 47 46 45 44 43 42 41 40 39 38 37 36 35 34 33 32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 59 1 
+  >> # of coef: 59, 0
+  + x^58 + x^57 + x^56 + x^55 + x^54 + x^53 + x^52 + x^51 + x^50 + x^49 + x^48 + x^47 + x^46 + x^45 + x^44 + x^43 + x^42 + x^41 + x^40 + x^39 + x^38 + x^37 + x^36 + x^35 + x^34 + x^33 + x^32 + x^31 + x^30 + x^29 + x^28 + x^27 + x^26 + x^25 + x^24 + x^23 + x^22 + x^21 + x^20 + x^19 + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(60):
+  prime factorzation:  * 2^2 * 3^1 * 5^1
+  coef 1: 16 14 2 0 
+  coef -1: 10 8 6 
+  divisors: 60 30 20 15 12 10 6 5 4 3 2 1 
+  >> # of coef: 4, 3
+  + x^16 + x^14 - x^10 - x^8 - x^6 + x^2 +1 
+PHI(61):
+  prime factorzation:  * 61^1
+  coef 1: 60 59 58 57 56 55 54 53 52 51 50 49 48 47 46 45 44 43 42 41 40 39 38 37 36 35 34 33 32 31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0 
+  coef -1: 
+  divisors: 61 1 
+  >> # of coef: 61, 0
+  + x^60 + x^59 + x^58 + x^57 + x^56 + x^55 + x^54 + x^53 + x^52 + x^51 + x^50 + x^49 + x^48 + x^47 + x^46 + x^45 + x^44 + x^43 + x^42 + x^41 + x^40 + x^39 + x^38 + x^37 + x^36 + x^35 + x^34 + x^33 + x^32 + x^31 + x^30 + x^29 + x^28 + x^27 + x^26 + x^25 + x^24 + x^23 + x^22 + x^21 + x^20 + x^19 + x^18 + x^17 + x^16 + x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 +1 
+PHI(62):
+  prime factorzation:  * 2^1 * 31^1
+  coef 1: 30 28 26 24 22 20 18 16 14 12 10 8 6 4 2 0 
+  coef -1: 29 27 25 23 21 19 17 15 13 11 9 7 5 3 1 
+  divisors: 62 31 2 1 
+  >> # of coef: 16, 15
+  + x^30 - x^29 + x^28 - x^27 + x^26 - x^25 + x^24 - x^23 + x^22 - x^21 + x^20 - x^19 + x^18 - x^17 + x^16 - x^15 + x^14 - x^13 + x^12 - x^11 + x^10 - x^9 + x^8 - x^7 + x^6 - x^5 + x^4 - x^3 + x^2 - x^1 +1 
+PHI(63):
+  prime factorzation:  * 3^2 * 7^1
+  coef 1: 36 27 18 9 0 
+  coef -1: 33 24 12 3 
+  divisors: 63 21 9 7 3 1 
+  >> # of coef: 5, 4
+  + x^36 - x^33 + x^27 - x^24 + x^18 - x^12 + x^9 - x^3 +1 
+PHI(64):
+  prime factorzation:  * 2^6
+  coef 1: 32 0 
+  coef -1: 
+  divisors: 64 32 16 8 4 2 1 
+  >> # of coef: 2, 0
+  + x^32 +1 
+PHI(65):
+  prime factorzation:  * 5^1 * 13^1
+  coef 1: 48 43 38 35 33 30 28 25 23 20 18 15 13 10 5 0 
+  coef -1: 47 42 37 34 32 29 27 24 21 19 16 14 11 6 1 
+  divisors: 65 13 5 1 
+  >> # of coef: 16, 15
+  + x^48 - x^47 + x^43 - x^42 + x^38 - x^37 + x^35 - x^34 + x^33 - x^32 + x^30 - x^29 + x^28 - x^27 + x^25 - x^24 + x^23 - x^21 + x^20 - x^19 + x^18 - x^16 + x^15 - x^14 + x^13 - x^11 + x^10 - x^6 + x^5 - x^1 +1 
+PHI(66):
+  prime factorzation:  * 2^1 * 3^1 * 11^1
+  coef 1: 20 19 14 13 7 6 1 0 
+  coef -1: 17 16 11 10 9 4 3 
+  divisors: 66 33 22 11 6 3 2 1 
+  >> # of coef: 8, 7
+  + x^20 + x^19 - x^17 - x^16 + x^14 + x^13 - x^11 - x^10 - x^9 + x^7 + x^6 - x^4 - x^3 + x^1 +1 

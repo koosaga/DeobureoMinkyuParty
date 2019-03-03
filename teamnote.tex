@@ -1885,8 +1885,15 @@ void fft(vector<base> &a, bool inv){
 	for(int i=0; i<n/2; i++){
 		roots[i] = (i ? (1ll * roots[i-1] * ang % mod) : 1);
 	}
-	Others are same. If there is /= n, do *= ipow(n, mod - 2).
-	In XOR convolution, roots[*] = 1.
+	XOR Convolution : set roots[*] = 1.
+	OR Convolution : set roots[*] = 1, and do following:
+    if (!inv) {
+        a[j + k] = u + v;
+        a[j + k + i/2] = u;
+    } else {
+        a[j + k] = v;
+        a[j + k + i/2] = u - v;
+    }
 	*/
 	for(int i=2; i<=n; i<<=1){
 		int step = n / i;
@@ -1898,7 +1905,7 @@ void fft(vector<base> &a, bool inv){
 			}
 		}
 	}
-	if(inv) for(int i=0; i<n; i++) a[i] /= n;
+	if(inv) for(int i=0; i<n; i++) a[i] /= n; // skip for OR convolution.
 }
 
 vector<lint> multiply(vector<lint> &v, vector<lint> &w){
@@ -2580,7 +2587,8 @@ $1012924417 = 483 \times 2^{21} + 1$. Primitive root: $5$.
     \item \textbf{Pick's Theorem}. $A=i+\frac{b}{2}-1$, where: $P$ is a simple polygon whose vertices are grid points, $A$ is area of $P$, $i$ is \# of grid points in the interior of $P$, and $b$ is \# of grid points on the boundary of $P$. \\
     If $h$ is \# of holes of $P$ ($h+1$ simple closed curves in total), $A=i+\frac{b}{2}+h-1$.
 \begin{minted}{cpp}
-// number of (x, y) : (0 <= x < n && 0 < y < k/d x + b/d)
+// number of (x, y) : (0 <= x < n && 0 < y <= k/d x + b/d)
+// argument should be positive
 ll count_solve(ll n, ll k, ll b, ll d) {
 	if (k == 0) {
 		return (b / d) * n;
