@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int MAXN = 200005;
+using pi = pair<int, int>;
+using lint = long long;
+
+struct edg{
+	int s, e, x, idx;
+	bool operator<(const edg &e)const{
+		return x < e.x;
+	}
+}
+
+int n, m, k;
+vector<int> gph[MAXN];
+int nxt[17][MAXN];
+
+lint solve(){
+	scanf("%d %d %d",&n,&m,&k);
+	for(int i=0; i<m; i++){
+		scanf("%d %d %d",&e[2*i].s,&e[2*i].e,&e[2*i].x);
+		e[2*i+1] = e[2*i];
+		swap(e[2*i+1].s, e[2*i+1].e);
+	}
+	for(int i=0; i<2*m; i++){
+		gph[e[i].s].push_back(i);
+	}
+	for(int i=1; i<=n; i++){
+		sort(gph[i].begin(), gph[i].end(), [&](const int &x, const int &y){
+			return e[x].x < e[y].x;
+		});
+	}
+	for(int i=1; i<=n; i++){
+		for(auto &j : gph[i]){
+			int s = 0, e = gph[j.e].size();
+			while(s != e){
+				int m = (s+e)/2;
+				if(gph[j.e][m].x < j.x) s = m + 1;
+				else e = m;
+			}
+			nxt[i] = 
+		}
+	}
+}
+
+int main(){
+	int tc;
+	scanf("%d",&tc);
+	for(int i=1; i<=tc; i++){
+		printf("Case #%d: %lld\n", i, solve());
+	}
+}

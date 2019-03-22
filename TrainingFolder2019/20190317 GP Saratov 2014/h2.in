@@ -1,0 +1,13 @@
+11
+20 push_back 4
+20 ?
+40 pop_back
+40 ?
+30 push_back 3
+30 ?
+10 push_front 1
+10 ?
+20 ?
+30 ?
+40 ?
+
