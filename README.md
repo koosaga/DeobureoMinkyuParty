@@ -24,18 +24,18 @@
  * 2018.10.06 5th in Korea National First Round 2018
  * 2018.11.03 4th in Seoul Regional 2018 (Univ Ranking 3rd)
  * 2018.11.11 Champion in Jakarta Regional 2018
- * 2019.04.04 ??? in World Finals 2019
+ * 2019.04.04 24th in World Finals 2019
 
 | Date       | Contest                    | AC   | Max  | A     | B     | C     | D     | E     | F     | G     | H     | I     | J     | K     | L     | M    |
 | ---------- | -------------------------- | ---- | ---- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ---- |
 | 2018.10.06 | Korea National First Round | 9    | 10   | **A** | **B** |   .   |   .   | **E** | **F** | **G** | **H** | **I** | .     | **K** | **L** |      |
-| 2018.11.03 | Seoul Regional      | 10   | 11   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | .     |       | **J** | **K** | **L** |      |
-| 2018.11.11 | Jakarta Regional | 11   | 11   | **A** | **B** | **C** | **D** | . | **F** | **G** | **H** | **I** | **J** | **K** | **L** |      |
-| 2019.04.04 | World Finals               | ?    | ?    | . | . | . | . | . | . | . | . | . | . | . | . | .     |
+| 2018.11.03 | Seoul Regional             | 10   | 11   | **A** | **B** | **C** | **D** | **E** | **F** | **G** | .     |       | **J** | **K** | **L** |      |
+| 2018.11.11 | Jakarta Regional           | 11   | 11   | **A** | **B** | **C** | **D** | . | **F** | **G** | **H** | **I** | **J** | **K** | **L** |      |
+| 2019.04.04 | World Finals               | 6    | 10   | **A** | **B** |   .   | **D** | **E** | . | **G** | **H** | . | . | . |   |       |
 
 
 ## Contest / Training
-All training results are summarized in [koosaga's blog](http://koosaga.com/). 
+Some training results are summarized in [koosaga's blog](http://koosaga.com/). 
 
 
 
