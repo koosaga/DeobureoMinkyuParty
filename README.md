@@ -158,4 +158,4 @@ It's a political joke...
 But, it also means "We are having party together with Minkyu", as "Deobureo" means "Together" in Korean.
 
 #### I think your teamnote is wrong, your algorithm fails on this following problems / cases : ####
-We usually double-check our teamnote algorithms, but still the algorithms are buggy sometimes. We really appreciate any attempts to increase our teamnote quality, so please contact us (use koosaga's codeforces messages) in such occasion!
+~~We usually double-check our teamnote algorithms, but still the algorithms are buggy sometimes. We really appreciate any attempts to increase our teamnote quality, so please contact us (use koosaga's codeforces messages) in such occasion!~~
