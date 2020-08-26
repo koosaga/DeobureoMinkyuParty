@@ -1,5 +1,7 @@
 # DeobureoMinkyuParty
 
+**DISCLAIMER:** This repository is not maintained after April 2019. Most of the code is currently being maintained in [koosaga code library](https://github.com/koosaga/olympiad/tree/master/Library/codes). 
+
  * [Jaehyun Koo (구재현)](http://koosaga.com/)
    * AtCoder : [koosaga](https://atcoder.jp/user/koosaga)
    * Baekjoon OJ : [koosaga](https://www.acmicpc.net/user/koosaga)
